@@ -1,7 +1,0 @@
-D:\Projects\Hanbo\MotionApp\Hanbo.ACS\bin\Debug\Hanbo.ACS.dll
-D:\Projects\Hanbo\MotionApp\Hanbo.ACS\bin\Debug\Hanbo.ACS.pdb
-D:\Projects\Hanbo\MotionApp\Hanbo.ACS\obj\Debug\Hanbo.ACS.csprojResolveAssemblyReference.cache
-D:\Projects\Hanbo\MotionApp\Hanbo.ACS\obj\Debug\Hanbo.ACS.dll
-D:\Projects\Hanbo\MotionApp\Hanbo.ACS\obj\Debug\Hanbo.ACS.pdb
-D:\Projects\Hanbo\MotionApp\Hanbo.ACS\bin\Debug\NLog.dll
-D:\Projects\Hanbo\MotionApp\Hanbo.ACS\bin\Debug\NLog.xml
