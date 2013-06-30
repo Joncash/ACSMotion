@@ -1,0 +1,5 @@
+D:\Projects\Hanbo\MotionApp\Hanbo.ACS\bin\Release\Hanbo.ACS.dll
+D:\Projects\Hanbo\MotionApp\Hanbo.ACS\bin\Release\Hanbo.ACS.pdb
+D:\Projects\Hanbo\MotionApp\Hanbo.ACS\obj\Release\Hanbo.ACS.csprojResolveAssemblyReference.cache
+D:\Projects\Hanbo\MotionApp\Hanbo.ACS\obj\Release\Hanbo.ACS.dll
+D:\Projects\Hanbo\MotionApp\Hanbo.ACS\obj\Release\Hanbo.ACS.pdb
