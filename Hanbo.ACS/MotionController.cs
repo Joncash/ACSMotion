@@ -18,6 +18,7 @@ namespace Hanbo.ACS
 		private BackgroundWorker _bgworkerForAllAxis = new BackgroundWorker();
 		private SPIIPLUSCOM660Lib.Channel _ch;
 		private const double m_VelocityUnit = 50000;
+		private int _waitTimeout = 40000;
 
 		public event AxisEnableEventHandler On_AxisEnabled;
 		public event XAxisMoveEventHandler On_XAxisMoved;
@@ -388,9 +389,9 @@ namespace Hanbo.ACS
 				_ch.RunBuffer(3);  //'3:      A()
 				_ch.RunBuffer(2);  //'2:      Y()
 				_ch.RunBuffer(1); //'1:      X() 
-				_ch.WaitProgramEnd(3, 40000);
-				_ch.WaitProgramEnd(2, 40000);
-				_ch.WaitProgramEnd(1, 40000);
+				_ch.WaitProgramEnd(3, _waitTimeout);
+				_ch.WaitProgramEnd(2, _waitTimeout);
+				_ch.WaitProgramEnd(1, _waitTimeout);
 
 				if (On_ResetPositioned != null)
 				{
@@ -403,6 +404,11 @@ namespace Hanbo.ACS
 				_log.Error("Reset, Error={0}", ex.StackTrace);
 			}
 		}
+		public void GoMeasurePosition()
+		{
+			_ch.RunBuffer(8);
+			_ch.WaitProgramEnd(8, _waitTimeout);
+		}
 
 		/// <summary>
 		/// Axis X = 1, Axis Y =2, Axis Z = 3
@@ -413,7 +419,7 @@ namespace Hanbo.ACS
 			try
 			{
 				_ch.RunBuffer(axis);
-				_ch.WaitProgramEnd(axis, 40000);
+				_ch.WaitProgramEnd(axis, _waitTimeout);
 				if (On_ResetPositioned != null)
 				{
 					On_ResetPositioned(null, "Reset Complete...");

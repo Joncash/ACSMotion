@@ -1,6 +1,6 @@
 ﻿namespace MotionApp
 {
-	partial class Form1
+	partial class MotionForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -67,10 +67,12 @@
 			this.textBox2 = new System.Windows.Forms.TextBox();
 			this.GoButton = new System.Windows.Forms.Button();
 			this.BackButton = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
 			this.MovePanel = new System.Windows.Forms.Panel();
-			this.viewPort = new HalconDotNet.HWindowControl();
 			this.GrabImageButton = new System.Windows.Forms.Button();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.TableObjectXTextBox = new System.Windows.Forms.TextBox();
+			this.TableObjectYTextBox = new System.Windows.Forms.TextBox();
 			this.statusStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.xMagnificationTrackBar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.yMagnificationTrackBar)).BeginInit();
@@ -87,7 +89,7 @@
 			// YAxis_label
 			// 
 			this.YAxis_label.AutoSize = true;
-			this.YAxis_label.Location = new System.Drawing.Point(47, 155);
+			this.YAxis_label.Location = new System.Drawing.Point(17, 105);
 			this.YAxis_label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.YAxis_label.Name = "YAxis_label";
 			this.YAxis_label.Size = new System.Drawing.Size(17, 17);
@@ -97,8 +99,8 @@
 			// XAxis_textBox
 			// 
 			this.XAxis_textBox.Font = new System.Drawing.Font("Microsoft JhengHei", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-			this.XAxis_textBox.Location = new System.Drawing.Point(113, 63);
-			this.XAxis_textBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.XAxis_textBox.Location = new System.Drawing.Point(83, 13);
+			this.XAxis_textBox.Margin = new System.Windows.Forms.Padding(4);
 			this.XAxis_textBox.Name = "XAxis_textBox";
 			this.XAxis_textBox.ReadOnly = true;
 			this.XAxis_textBox.Size = new System.Drawing.Size(277, 61);
@@ -109,8 +111,8 @@
 			// ZAxis_textBox
 			// 
 			this.ZAxis_textBox.Font = new System.Drawing.Font("Microsoft JhengHei", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-			this.ZAxis_textBox.Location = new System.Drawing.Point(113, 212);
-			this.ZAxis_textBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.ZAxis_textBox.Location = new System.Drawing.Point(83, 162);
+			this.ZAxis_textBox.Margin = new System.Windows.Forms.Padding(4);
 			this.ZAxis_textBox.Name = "ZAxis_textBox";
 			this.ZAxis_textBox.ReadOnly = true;
 			this.ZAxis_textBox.Size = new System.Drawing.Size(277, 61);
@@ -121,8 +123,8 @@
 			// YAxis_textBox
 			// 
 			this.YAxis_textBox.Font = new System.Drawing.Font("Microsoft JhengHei", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-			this.YAxis_textBox.Location = new System.Drawing.Point(113, 138);
-			this.YAxis_textBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.YAxis_textBox.Location = new System.Drawing.Point(83, 88);
+			this.YAxis_textBox.Margin = new System.Windows.Forms.Padding(4);
 			this.YAxis_textBox.Name = "YAxis_textBox";
 			this.YAxis_textBox.ReadOnly = true;
 			this.YAxis_textBox.Size = new System.Drawing.Size(277, 61);
@@ -137,10 +139,10 @@
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
             this.toolStripStatusLabel3});
-			this.statusStrip1.Location = new System.Drawing.Point(0, 556);
+			this.statusStrip1.Location = new System.Drawing.Point(0, 474);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-			this.statusStrip1.Size = new System.Drawing.Size(1041, 25);
+			this.statusStrip1.Size = new System.Drawing.Size(643, 25);
 			this.statusStrip1.TabIndex = 7;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
@@ -167,8 +169,8 @@
 			// 
 			// xMagnificationTrackBar
 			// 
-			this.xMagnificationTrackBar.Location = new System.Drawing.Point(400, 66);
-			this.xMagnificationTrackBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.xMagnificationTrackBar.Location = new System.Drawing.Point(370, 16);
+			this.xMagnificationTrackBar.Margin = new System.Windows.Forms.Padding(4);
 			this.xMagnificationTrackBar.Name = "xMagnificationTrackBar";
 			this.xMagnificationTrackBar.Size = new System.Drawing.Size(172, 56);
 			this.xMagnificationTrackBar.TabIndex = 25;
@@ -176,8 +178,8 @@
 			// 
 			// yMagnificationTrackBar
 			// 
-			this.yMagnificationTrackBar.Location = new System.Drawing.Point(400, 140);
-			this.yMagnificationTrackBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.yMagnificationTrackBar.Location = new System.Drawing.Point(370, 90);
+			this.yMagnificationTrackBar.Margin = new System.Windows.Forms.Padding(4);
 			this.yMagnificationTrackBar.Name = "yMagnificationTrackBar";
 			this.yMagnificationTrackBar.Size = new System.Drawing.Size(172, 56);
 			this.yMagnificationTrackBar.TabIndex = 26;
@@ -185,8 +187,8 @@
 			// 
 			// zMagnificationTrackBar
 			// 
-			this.zMagnificationTrackBar.Location = new System.Drawing.Point(400, 210);
-			this.zMagnificationTrackBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.zMagnificationTrackBar.Location = new System.Drawing.Point(370, 160);
+			this.zMagnificationTrackBar.Margin = new System.Windows.Forms.Padding(4);
 			this.zMagnificationTrackBar.Name = "zMagnificationTrackBar";
 			this.zMagnificationTrackBar.Size = new System.Drawing.Size(172, 56);
 			this.zMagnificationTrackBar.TabIndex = 28;
@@ -199,8 +201,8 @@
             0,
             0,
             0});
-			this.xSpeedUnitDropDown.Location = new System.Drawing.Point(580, 66);
-			this.xSpeedUnitDropDown.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.xSpeedUnitDropDown.Location = new System.Drawing.Point(550, 16);
+			this.xSpeedUnitDropDown.Margin = new System.Windows.Forms.Padding(4);
 			this.xSpeedUnitDropDown.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -227,8 +229,8 @@
             0,
             0,
             0});
-			this.ySpeedUnitDropDown.Location = new System.Drawing.Point(580, 140);
-			this.ySpeedUnitDropDown.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.ySpeedUnitDropDown.Location = new System.Drawing.Point(550, 90);
+			this.ySpeedUnitDropDown.Margin = new System.Windows.Forms.Padding(4);
 			this.ySpeedUnitDropDown.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -255,8 +257,8 @@
             0,
             0,
             0});
-			this.zSpeedUnitDropDown.Location = new System.Drawing.Point(580, 214);
-			this.zSpeedUnitDropDown.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.zSpeedUnitDropDown.Location = new System.Drawing.Point(550, 164);
+			this.zSpeedUnitDropDown.Margin = new System.Windows.Forms.Padding(4);
 			this.zSpeedUnitDropDown.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -279,8 +281,8 @@
 			// zAxisPicture
 			// 
 			this.zAxisPicture.Image = global::MotionApp.Properties.Resources.Letter_Z_grey_icon1;
-			this.zAxisPicture.Location = new System.Drawing.Point(41, 214);
-			this.zAxisPicture.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.zAxisPicture.Location = new System.Drawing.Point(11, 164);
+			this.zAxisPicture.Margin = new System.Windows.Forms.Padding(4);
 			this.zAxisPicture.Name = "zAxisPicture";
 			this.zAxisPicture.Size = new System.Drawing.Size(48, 48);
 			this.zAxisPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -290,8 +292,8 @@
 			// yAxisPicture
 			// 
 			this.yAxisPicture.Image = global::MotionApp.Properties.Resources.Letter_Y_grey_icon;
-			this.yAxisPicture.Location = new System.Drawing.Point(41, 140);
-			this.yAxisPicture.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.yAxisPicture.Location = new System.Drawing.Point(11, 90);
+			this.yAxisPicture.Margin = new System.Windows.Forms.Padding(4);
 			this.yAxisPicture.Name = "yAxisPicture";
 			this.yAxisPicture.Size = new System.Drawing.Size(48, 48);
 			this.yAxisPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -301,8 +303,8 @@
 			// xAxisPicture
 			// 
 			this.xAxisPicture.Image = global::MotionApp.Properties.Resources.Letter_X_grey_icon;
-			this.xAxisPicture.Location = new System.Drawing.Point(41, 63);
-			this.xAxisPicture.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.xAxisPicture.Location = new System.Drawing.Point(11, 13);
+			this.xAxisPicture.Margin = new System.Windows.Forms.Padding(4);
 			this.xAxisPicture.Name = "xAxisPicture";
 			this.xAxisPicture.Size = new System.Drawing.Size(48, 48);
 			this.xAxisPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -313,7 +315,7 @@
 			// 
 			this.resetPostionBtn.Image = global::MotionApp.Properties.Resources._0;
 			this.resetPostionBtn.Location = new System.Drawing.Point(79, 79);
-			this.resetPostionBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.resetPostionBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.resetPostionBtn.Name = "resetPostionBtn";
 			this.resetPostionBtn.Size = new System.Drawing.Size(64, 64);
 			this.resetPostionBtn.TabIndex = 22;
@@ -324,7 +326,7 @@
 			// 
 			this.XPYNAxis_button.Image = global::MotionApp.Properties.Resources._2;
 			this.XPYNAxis_button.Location = new System.Drawing.Point(150, 152);
-			this.XPYNAxis_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.XPYNAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.XPYNAxis_button.Name = "XPYNAxis_button";
 			this.XPYNAxis_button.Size = new System.Drawing.Size(64, 64);
 			this.XPYNAxis_button.TabIndex = 21;
@@ -336,7 +338,7 @@
 			// 
 			this.XNYNAxis_button.Image = global::MotionApp.Properties.Resources._4;
 			this.XNYNAxis_button.Location = new System.Drawing.Point(6, 152);
-			this.XNYNAxis_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.XNYNAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.XNYNAxis_button.Name = "XNYNAxis_button";
 			this.XNYNAxis_button.Size = new System.Drawing.Size(64, 64);
 			this.XNYNAxis_button.TabIndex = 20;
@@ -348,7 +350,7 @@
 			// 
 			this.XPYPAxis_button.Image = global::MotionApp.Properties.Resources._8;
 			this.XPYPAxis_button.Location = new System.Drawing.Point(150, 8);
-			this.XPYPAxis_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.XPYPAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.XPYPAxis_button.Name = "XPYPAxis_button";
 			this.XPYPAxis_button.Size = new System.Drawing.Size(64, 64);
 			this.XPYPAxis_button.TabIndex = 19;
@@ -360,7 +362,7 @@
 			// 
 			this.XNYPAxis_button.Image = global::MotionApp.Properties.Resources._6;
 			this.XNYPAxis_button.Location = new System.Drawing.Point(6, 8);
-			this.XNYPAxis_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.XNYPAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.XNYPAxis_button.Name = "XNYPAxis_button";
 			this.XNYPAxis_button.Size = new System.Drawing.Size(64, 64);
 			this.XNYPAxis_button.TabIndex = 18;
@@ -372,7 +374,7 @@
 			// 
 			this.ZNAxis_button.Image = global::MotionApp.Properties.Resources._7;
 			this.ZNAxis_button.Location = new System.Drawing.Point(244, 8);
-			this.ZNAxis_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.ZNAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.ZNAxis_button.Name = "ZNAxis_button";
 			this.ZNAxis_button.Size = new System.Drawing.Size(64, 64);
 			this.ZNAxis_button.TabIndex = 15;
@@ -384,7 +386,7 @@
 			// 
 			this.YNAxis_button.Image = global::MotionApp.Properties.Resources._3;
 			this.YNAxis_button.Location = new System.Drawing.Point(78, 152);
-			this.YNAxis_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.YNAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.YNAxis_button.Name = "YNAxis_button";
 			this.YNAxis_button.Size = new System.Drawing.Size(64, 64);
 			this.YNAxis_button.TabIndex = 14;
@@ -396,7 +398,7 @@
 			// 
 			this.XNAxis_button.Image = global::MotionApp.Properties.Resources._5;
 			this.XNAxis_button.Location = new System.Drawing.Point(6, 79);
-			this.XNAxis_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.XNAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.XNAxis_button.Name = "XNAxis_button";
 			this.XNAxis_button.Size = new System.Drawing.Size(64, 64);
 			this.XNAxis_button.TabIndex = 13;
@@ -407,8 +409,8 @@
 			// ServoOff_button
 			// 
 			this.ServoOff_button.Image = global::MotionApp.Properties.Resources.servoOff;
-			this.ServoOff_button.Location = new System.Drawing.Point(39, 463);
-			this.ServoOff_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.ServoOff_button.Location = new System.Drawing.Point(11, 392);
+			this.ServoOff_button.Margin = new System.Windows.Forms.Padding(4);
 			this.ServoOff_button.Name = "ServoOff_button";
 			this.ServoOff_button.Size = new System.Drawing.Size(64, 64);
 			this.ServoOff_button.TabIndex = 12;
@@ -418,8 +420,8 @@
 			// Init_button
 			// 
 			this.Init_button.Image = global::MotionApp.Properties.Resources.init;
-			this.Init_button.Location = new System.Drawing.Point(39, 319);
-			this.Init_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.Init_button.Location = new System.Drawing.Point(11, 248);
+			this.Init_button.Margin = new System.Windows.Forms.Padding(4);
 			this.Init_button.Name = "Init_button";
 			this.Init_button.Size = new System.Drawing.Size(64, 64);
 			this.Init_button.TabIndex = 11;
@@ -430,7 +432,7 @@
 			// 
 			this.ZPAxis_button.Image = global::MotionApp.Properties.Resources._3;
 			this.ZPAxis_button.Location = new System.Drawing.Point(244, 153);
-			this.ZPAxis_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.ZPAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.ZPAxis_button.Name = "ZPAxis_button";
 			this.ZPAxis_button.Size = new System.Drawing.Size(64, 64);
 			this.ZPAxis_button.TabIndex = 10;
@@ -442,7 +444,7 @@
 			// 
 			this.YPAxis_button.Image = global::MotionApp.Properties.Resources._7;
 			this.YPAxis_button.Location = new System.Drawing.Point(78, 8);
-			this.YPAxis_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.YPAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.YPAxis_button.Name = "YPAxis_button";
 			this.YPAxis_button.Size = new System.Drawing.Size(64, 64);
 			this.YPAxis_button.TabIndex = 9;
@@ -454,7 +456,7 @@
 			// 
 			this.XPAxis_button.Image = global::MotionApp.Properties.Resources._1;
 			this.XPAxis_button.Location = new System.Drawing.Point(151, 79);
-			this.XPAxis_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.XPAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.XPAxis_button.Name = "XPAxis_button";
 			this.XPAxis_button.Size = new System.Drawing.Size(64, 64);
 			this.XPAxis_button.TabIndex = 8;
@@ -464,8 +466,8 @@
 			// ServoOn_button
 			// 
 			this.ServoOn_button.Image = global::MotionApp.Properties.Resources.servoOn;
-			this.ServoOn_button.Location = new System.Drawing.Point(39, 390);
-			this.ServoOn_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.ServoOn_button.Location = new System.Drawing.Point(11, 319);
+			this.ServoOn_button.Margin = new System.Windows.Forms.Padding(4);
 			this.ServoOn_button.Name = "ServoOn_button";
 			this.ServoOn_button.Size = new System.Drawing.Size(64, 64);
 			this.ServoOn_button.TabIndex = 6;
@@ -474,19 +476,19 @@
 			// 
 			// PEGMoveButton
 			// 
-			this.PEGMoveButton.Location = new System.Drawing.Point(450, 302);
-			this.PEGMoveButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.PEGMoveButton.Location = new System.Drawing.Point(412, 392);
+			this.PEGMoveButton.Margin = new System.Windows.Forms.Padding(4);
 			this.PEGMoveButton.Name = "PEGMoveButton";
-			this.PEGMoveButton.Size = new System.Drawing.Size(83, 81);
+			this.PEGMoveButton.Size = new System.Drawing.Size(216, 58);
 			this.PEGMoveButton.TabIndex = 36;
-			this.PEGMoveButton.Text = "PEG";
+			this.PEGMoveButton.Text = "Scan";
 			this.PEGMoveButton.UseVisualStyleBackColor = true;
 			this.PEGMoveButton.Click += new System.EventHandler(this.PEGMoveButton_Click);
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(446, 390);
+			this.label1.Location = new System.Drawing.Point(872, 415);
 			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(59, 17);
@@ -496,7 +498,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(446, 426);
+			this.label2.Location = new System.Drawing.Point(872, 451);
 			this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(59, 17);
@@ -505,24 +507,24 @@
 			// 
 			// textBox1
 			// 
-			this.textBox1.Location = new System.Drawing.Point(514, 386);
-			this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBox1.Location = new System.Drawing.Point(940, 411);
+			this.textBox1.Margin = new System.Windows.Forms.Padding(4);
 			this.textBox1.Name = "textBox1";
 			this.textBox1.Size = new System.Drawing.Size(88, 22);
 			this.textBox1.TabIndex = 39;
 			// 
 			// textBox2
 			// 
-			this.textBox2.Location = new System.Drawing.Point(512, 422);
-			this.textBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBox2.Location = new System.Drawing.Point(938, 447);
+			this.textBox2.Margin = new System.Windows.Forms.Padding(4);
 			this.textBox2.Name = "textBox2";
 			this.textBox2.Size = new System.Drawing.Size(89, 22);
 			this.textBox2.TabIndex = 40;
 			// 
 			// GoButton
 			// 
-			this.GoButton.Location = new System.Drawing.Point(450, 463);
-			this.GoButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.GoButton.Location = new System.Drawing.Point(884, 479);
+			this.GoButton.Margin = new System.Windows.Forms.Padding(4);
 			this.GoButton.Name = "GoButton";
 			this.GoButton.Size = new System.Drawing.Size(68, 64);
 			this.GoButton.TabIndex = 41;
@@ -532,25 +534,14 @@
 			// 
 			// BackButton
 			// 
-			this.BackButton.Location = new System.Drawing.Point(535, 463);
-			this.BackButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.BackButton.Location = new System.Drawing.Point(960, 479);
+			this.BackButton.Margin = new System.Windows.Forms.Padding(4);
 			this.BackButton.Name = "BackButton";
 			this.BackButton.Size = new System.Drawing.Size(68, 64);
 			this.BackButton.TabIndex = 42;
 			this.BackButton.Text = "Back";
 			this.BackButton.UseVisualStyleBackColor = true;
 			this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
-			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(554, 306);
-			this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(48, 75);
-			this.button1.TabIndex = 43;
-			this.button1.Text = "button1";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// MovePanel
 			// 
@@ -565,41 +556,66 @@
 			this.MovePanel.Controls.Add(this.XPYNAxis_button);
 			this.MovePanel.Controls.Add(this.ZNAxis_button);
 			this.MovePanel.Controls.Add(this.ZPAxis_button);
-			this.MovePanel.Location = new System.Drawing.Point(105, 311);
+			this.MovePanel.Location = new System.Drawing.Point(77, 240);
 			this.MovePanel.Name = "MovePanel";
 			this.MovePanel.Size = new System.Drawing.Size(328, 221);
 			this.MovePanel.TabIndex = 44;
 			// 
-			// viewPort
-			// 
-			this.viewPort.BackColor = System.Drawing.Color.Black;
-			this.viewPort.BorderColor = System.Drawing.Color.Black;
-			this.viewPort.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
-			this.viewPort.Location = new System.Drawing.Point(696, 33);
-			this.viewPort.Name = "viewPort";
-			this.viewPort.Size = new System.Drawing.Size(320, 240);
-			this.viewPort.TabIndex = 45;
-			this.viewPort.WindowSize = new System.Drawing.Size(320, 240);
-			// 
 			// GrabImageButton
 			// 
-			this.GrabImageButton.Location = new System.Drawing.Point(657, 306);
+			this.GrabImageButton.Location = new System.Drawing.Point(875, 307);
 			this.GrabImageButton.Name = "GrabImageButton";
-			this.GrabImageButton.Size = new System.Drawing.Size(182, 76);
+			this.GrabImageButton.Size = new System.Drawing.Size(152, 76);
 			this.GrabImageButton.TabIndex = 46;
 			this.GrabImageButton.Text = " 擷取影像";
 			this.GrabImageButton.UseVisualStyleBackColor = true;
 			this.GrabImageButton.Click += new System.EventHandler(this.GrabImageButton_Click);
 			// 
-			// Form1
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(411, 248);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(159, 17);
+			this.label3.TabIndex = 47;
+			this.label3.Text = "受測物 X 方向長度 (mm)";
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(411, 319);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(159, 17);
+			this.label4.TabIndex = 48;
+			this.label4.Text = "受測物 Y 方向長度 (mm)";
+			// 
+			// TableObjectXTextBox
+			// 
+			this.TableObjectXTextBox.Location = new System.Drawing.Point(414, 268);
+			this.TableObjectXTextBox.Name = "TableObjectXTextBox";
+			this.TableObjectXTextBox.Size = new System.Drawing.Size(214, 22);
+			this.TableObjectXTextBox.TabIndex = 49;
+			this.TableObjectXTextBox.TextChanged += new System.EventHandler(this.TableObjectXTextBox_TextChanged);
+			// 
+			// TableObjectYTextBox
+			// 
+			this.TableObjectYTextBox.Location = new System.Drawing.Point(414, 339);
+			this.TableObjectYTextBox.Name = "TableObjectYTextBox";
+			this.TableObjectYTextBox.Size = new System.Drawing.Size(214, 22);
+			this.TableObjectYTextBox.TabIndex = 50;
+			this.TableObjectYTextBox.TextChanged += new System.EventHandler(this.TableObjectYTextBox_TextChanged);
+			// 
+			// MotionForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1041, 581);
+			this.ClientSize = new System.Drawing.Size(643, 499);
+			this.Controls.Add(this.TableObjectYTextBox);
+			this.Controls.Add(this.TableObjectXTextBox);
+			this.Controls.Add(this.label4);
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.GrabImageButton);
-			this.Controls.Add(this.viewPort);
 			this.Controls.Add(this.MovePanel);
-			this.Controls.Add(this.button1);
 			this.Controls.Add(this.BackButton);
 			this.Controls.Add(this.GoButton);
 			this.Controls.Add(this.textBox2);
@@ -624,9 +640,9 @@
 			this.Controls.Add(this.ZAxis_textBox);
 			this.Controls.Add(this.XAxis_textBox);
 			this.Controls.Add(this.YAxis_label);
-			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.Name = "Form1";
-			this.Text = "Form1";
+			this.Margin = new System.Windows.Forms.Padding(4);
+			this.Name = "MotionForm";
+			this.Text = "MotionForm";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_Closing);
 			this.Load += new System.EventHandler(this.Form1_Load);
 			this.Shown += new System.EventHandler(this.Form1_Shown);
@@ -688,10 +704,12 @@
 		private System.Windows.Forms.TextBox textBox2;
 		private System.Windows.Forms.Button GoButton;
 		private System.Windows.Forms.Button BackButton;
-		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Panel MovePanel;
-		private HalconDotNet.HWindowControl viewPort;
 		private System.Windows.Forms.Button GrabImageButton;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.TextBox TableObjectXTextBox;
+		private System.Windows.Forms.TextBox TableObjectYTextBox;
 	}
 }
 
