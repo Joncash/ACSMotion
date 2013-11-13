@@ -13,9 +13,12 @@ namespace Hanbo.ACS
 	public class MotionController
 	{
 		private static Logger _log = NLog.LogManager.GetCurrentClassLogger();
+		private string _motionControllerIP = "10.0.0.100";
 		private BackgroundWorker _bgworker = new BackgroundWorker();
 		private BackgroundWorker _bgworkerForAllAxis = new BackgroundWorker();
 		private SPIIPLUSCOM660Lib.Channel _ch;
+		private const double m_VelocityUnit = 50000;
+
 		public event AxisEnableEventHandler On_AxisEnabled;
 		public event XAxisMoveEventHandler On_XAxisMoved;
 		public event YAxisMoveEventHandler On_YAxisMoved;
@@ -26,7 +29,7 @@ namespace Hanbo.ACS
 		public event InitMotionEventHandler On_MotionInited;
 		public event DisableAxisAllMotionEventHandler On_AllAxisDisabled;
 		public event ResetEventHandler On_ResetPositioned;
-		private const double m_VelocityUnit = 50000;
+
 
 		/// <summary>
 		/// initialize
@@ -34,6 +37,21 @@ namespace Hanbo.ACS
 		public MotionController()
 		{
 			//init backgroundworker
+			initialize();
+		}
+
+		/// <summary>
+		/// MotionController
+		/// </summary>
+		/// <param name="motionControllerIP">Motion Controller IP, 預設為 10.0.0.100</param>
+		public MotionController(string motionControllerIP)
+		{
+			_motionControllerIP = motionControllerIP;
+			initialize();
+		}
+
+		private void initialize()
+		{
 			_bgworker.WorkerReportsProgress = true;
 			_bgworker.WorkerSupportsCancellation = true;
 			_bgworker.DoWork += _bgworker_DoWork;
@@ -46,7 +64,8 @@ namespace Hanbo.ACS
 			_bgworkerForAllAxis.ProgressChanged += _bgworkerForAxis_ProgressChanged;
 			_bgworkerForAllAxis.RunWorkerCompleted += _bgworkerForAxis_RunWorkerCompleted;
 		}
-		
+
+
 		void _bgworkerForAxis_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			throw new NotImplementedException();
@@ -113,7 +132,7 @@ namespace Hanbo.ACS
 				else
 				{
 					var protocol = _ch.ACSC_SOCKET_DGRAM_PORT;
-					_ch.OpenCommEthernet("10.0.0.100", protocol);
+					_ch.OpenCommEthernet(_motionControllerIP, protocol);
 				}
 
 				_ch.RegisterEmergencyStop();
@@ -209,7 +228,7 @@ namespace Hanbo.ACS
 			}
 
 		}
-		
+
 		/// <summary>
 		/// 指定某一軸，呈顯激活狀態，並等待電機指令的狀態
 		/// </summary>
@@ -277,7 +296,7 @@ namespace Hanbo.ACS
 				axisList[axiss.Length] = -1;
 				var dirList = dirs.Select(s => (int)s).ToArray();
 				_ch.JogM(_ch.ACSC_AMF_VELOCITY, axisList, dirList, velocity);
-			
+
 			}
 			catch (COMException ex)
 			{
@@ -293,7 +312,7 @@ namespace Hanbo.ACS
 		public void AxisHalf(Axis[] axisList)
 		{
 			try
-			{				
+			{
 				if (axisList.Length == 1)
 				{
 					_ch.Halt((int)axisList[0]);
@@ -313,7 +332,7 @@ namespace Hanbo.ACS
 				{
 					On_AxisHalted(null, new HaltedResultViewModel() { AxisList = axisList, Message = "Success" });
 				}
-				
+
 			}
 			catch (COMException ex)
 			{
@@ -335,7 +354,7 @@ namespace Hanbo.ACS
 			{
 				_log.Error("CancelSigleDisplayPositionBackgroupWork, Error={0}", ex.StackTrace);
 			}
-			
+
 		}
 
 		/// <summary>
@@ -384,5 +403,138 @@ namespace Hanbo.ACS
 				_log.Error("Reset, Error={0}", ex.StackTrace);
 			}
 		}
+
+		/// <summary>
+		/// Axis X = 1, Axis Y =2, Axis Z = 3
+		/// </summary>
+		/// <param name="axis"></param>
+		public void AxisBackToZero(int axis)
+		{
+			try
+			{
+				_ch.RunBuffer(axis);
+				_ch.WaitProgramEnd(axis, 40000);
+				if (On_ResetPositioned != null)
+				{
+					On_ResetPositioned(null, "Reset Complete...");
+				}
+			}
+			catch (COMException ex)
+			{
+				On_ErrorHandler(null, ex);
+				_log.Error("Reset, Error={0}", ex.StackTrace);
+			}
+		}
+
+		/// <summary>
+		/// GetFPosition
+		/// </summary>
+		/// <param name="axis">軸</param>
+		/// <returns></returns>
+		public double FPOS(int axis)
+		{
+			return _ch.GetFPosition(axis);
+		}
+
+		/// <summary>
+		/// SETCONF
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="index"></param>
+		/// <param name="value"></param>
+		public void SETCONF(int key, int index, double value)
+		{
+			_ch.SetConf(key, index, value);
+		}
+
+		/// <summary>
+		/// VEL (Velocity)
+		/// </summary>
+		/// <param name="axis"></param>
+		/// <param name="value"></param>
+		public void VEL(int axis, double value)
+		{
+			_ch.SetVelocity(axis, value);
+		}
+
+		/// <summary>
+		/// ACC, Acceleration
+		/// </summary>
+		/// <param name="axis"></param>
+		/// <param name="value"></param>
+		public void ACC(int axis, double value)
+		{
+			_ch.SetAcceleration(axis, value);
+		}
+
+		/// <summary>
+		/// DEC, DeAcceleration
+		/// </summary>
+		/// <param name="axis"></param>
+		/// <param name="value"></param>
+		public void DEC(int axis, double value)
+		{
+			_ch.SetDeceleration(axis, value);
+		}
+
+		/// <summary>
+		/// JERK
+		/// </summary>
+		/// <param name="axis"></param>
+		/// <param name="value"></param>
+		public void JERK(int axis, double value)
+		{
+			_ch.SetJerk(axis, value);
+		}
+
+		public void PEG_I_S(int axis, double width, double firstPoint, double interval, double lastPoint)
+		{
+			var flags = _ch.ACSC_AMF_SYNCHRONOUS;
+			PEG_I(flags, axis, width, firstPoint, interval, lastPoint);
+		}
+		public void PEG_I(int flags, int axis, double width, double firstPoint, double interval, double lastPoint)
+		{
+			_ch.PegInc(flags, axis, width, firstPoint, interval, lastPoint, _ch.ACSC_NONE, _ch.ACSC_NONE);
+			_ch.EndSequence(axis);
+		}
+
+		/// <summary>
+		/// Point To Point With Parameter R , E
+		/// R means the Point value is relative to the end point of the previous motion.
+		/// E means Wait for motion termination before executing next command
+		/// In this function, wait for motion termination with 2000ms timeout
+		/// </summary>
+		/// <param name="axis"></param>
+		/// <param name="point"></param>
+		public void PTP_RE(int axis, double point)
+		{
+			int flags = _ch.ACSC_AMF_RELATIVE;
+			_ch.ToPoint(flags, axis, point);
+			//_ch.WaitMotionEnd(axis, 200000);
+			_ch.EndSequence(axis);
+			_ch.WaitMotionEnd(axis, 20000);
+		}
+		public void PEG_GoAndBack(int axis, double point)
+		{
+			int flags = _ch.ACSC_AMF_RELATIVE;
+			_ch.ToPoint(flags, axis, point);
+			//_ch.WaitMotionEnd(axis, 200000);
+			_ch.ToPoint(flags, axis, -point);
+			//_ch.WaitMotionEnd(axis, 200000);
+			_ch.EndSequence(axis);
+			_ch.WaitMotionEnd(axis, 200000);
+		}
+
+		public void PTP_E(int axis, double point)
+		{
+			int flags = _ch.ACSC_NONE;
+			flags = _ch.ACSC_AMF_RELATIVE;
+			_ch.ToPoint(flags, axis, point);
+			//_ch.WaitMotionEnd(axis, 200000);
+			_ch.EndSequence(axis);
+			_ch.WaitMotionEnd(axis, 200000);
+		}
+
+
 	}
 }

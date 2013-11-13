@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Hanbo.ACS;
 using NLog;
+using Hanbo.Camera;
+using HalconDotNet;
 
 namespace MotionApp
 {
@@ -17,20 +19,19 @@ namespace MotionApp
 	{
 		private static Logger _log = NLog.LogManager.GetCurrentClassLogger();
 		private MotionController _motionController;
+		private MotionAssistant _motionAsit;
+		private LineScan _lineScan = new LineScan();
 		public Form1()
 		{
-			_motionController = new MotionController();
-			_motionController.On_AxisEnabled += _motionController_On_AxisEnabled;
-			_motionController.On_XAxisMoved += _motionController_On_XAxisMoved;
-			_motionController.On_YAxisMoved += _motionController_On_YAxisMoved;
-			_motionController.On_ZAxisMoved += _motionController_On_ZAxisMoved;
-			_motionController.On_ErrorHandler += _motionController_On_ErrorHanlder;
-			_motionController.On_AllAxisDisabled += _motionController_On_AllAxisDisabled;
-			_motionController.On_MotionInited += _motionController_On_MotionInited;
-			_motionController.On_ResetPositioned += _motionController_On_ResetPositioned;
 			InitializeComponent();
-			XPAxis_button.MouseUp += XAxis_button_MouseUp;
 
+			_lineScan.On_RunningMessage += _lineScan_On_RunningMessage;
+			_lineScan.On_Loaded += _lineScan_On_Loaded;
+			_lineScan.On_GrabImageChanged += _lineScan_On_GrabImageChanged;
+		}
+
+		private void initilizeUIEnableStatus()
+		{
 			XNYPAxis_button.Enabled = false;
 			YPAxis_button.Enabled = false;
 			XPYPAxis_button.Enabled = false;
@@ -44,7 +45,34 @@ namespace MotionApp
 			ZNAxis_button.Enabled = false;
 		}
 
-	
+		private void Form1_Load(object sender, EventArgs e)
+		{
+			initilizeUIEnableStatus();
+			initializeMotionController();
+			XPAxis_button.MouseUp += XAxis_button_MouseUp;
+
+
+		}
+
+		private void Form1_Shown(object sender, EventArgs e)
+		{
+
+		}
+
+		private void initializeMotionController()
+		{
+			_motionController = new MotionController();
+			_motionController.On_AxisEnabled += _motionController_On_AxisEnabled;
+			_motionController.On_XAxisMoved += _motionController_On_XAxisMoved;
+			_motionController.On_YAxisMoved += _motionController_On_YAxisMoved;
+			_motionController.On_ZAxisMoved += _motionController_On_ZAxisMoved;
+			_motionController.On_ErrorHandler += _motionController_On_ErrorHanlder;
+			_motionController.On_AllAxisDisabled += _motionController_On_AllAxisDisabled;
+			_motionController.On_MotionInited += _motionController_On_MotionInited;
+			_motionController.On_ResetPositioned += _motionController_On_ResetPositioned;
+
+			_motionAsit = new MotionAssistant(_motionController);
+		}
 
 		void _motionController_On_ErrorHanlder(object sender, System.Runtime.InteropServices.COMException exception)
 		{
@@ -123,7 +151,7 @@ namespace MotionApp
 		private void XNAxis_MouseDown(object sender, MouseEventArgs e)
 		{
 			xAxisPicture.Image = MotionApp.Properties.Resources.Letter_X_lg_icon;
-			_motionController.SingleAxisMove(Axis.X, Direction.NEGATIVE,  xMagnificationTrackBar.Value * (int)xSpeedUnitDropDown.Value);
+			_motionController.SingleAxisMove(Axis.X, Direction.NEGATIVE, xMagnificationTrackBar.Value * (int)xSpeedUnitDropDown.Value);
 		}
 
 		/// <summary>
@@ -170,7 +198,7 @@ namespace MotionApp
 			yAxisPicture.Image = MotionApp.Properties.Resources.Letter_Y_grey_icon;
 			_motionController.StopPositionDetection();
 			_motionController.AxisHalf(new Axis[] { Axis.Y });
-		}	
+		}
 
 		/// <summary>
 		/// Z軸正向移動
@@ -334,7 +362,9 @@ namespace MotionApp
 		/// <param name="e"></param>
 		private void resetPostionBtn_Click(object sender, EventArgs e)
 		{
-			_motionController.AllAxisBackToZero();
+			//_motionController.AllAxisBackToZero();
+			_motionController.AxisBackToZero(1);
+			_motionController.AxisBackToZero(2);
 		}
 
 		/// <summary>
@@ -366,19 +396,97 @@ namespace MotionApp
 		void _motionController_On_AllAxisDisabled(object sender, string eventArgs)
 		{
 			toolStripStatusLabel.Text = eventArgs;
-
 		}
 
 
-		
+		private void PEGMoveButton_Click(object sender, EventArgs e)
+		{
+			if (_motionAsit != null)
+			{
+				_motionAsit.RunPEG(YLoop, XLoop, 4096, 4096);
+			}
+		}
 
-		
-
-		
 
 
+		public int XLoop
+		{
+			get
+			{
+				int x;
+				if (!Int32.TryParse(textBox1.Text, out x))
+					x = 1;
+				return x;
+			}
+		}
+		public int YLoop
+		{
+			get
+			{
+				int x;
+				if (!Int32.TryParse(textBox2.Text, out x))
+					x = 1;
+				return x;
+			}
+		}
 
-		
+		double SS;
+		private void GoButton_Click(object sender, EventArgs e)
+		{
+			SS = _motionController.FPOS(1);
+			_motionController.PTP_RE(1, 10000);
+		}
+
+		private void BackButton_Click(object sender, EventArgs e)
+		{
+			double START_PEG_POS = _motionController.FPOS(1);
+			_motionController.PTP_RE(1, -10000);
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			//yMove
+			var AY = 1;
+			var PEG_DIST = 30000.0;
+
+			var START_PEG_POS = _motionController.FPOS(AY);
+			var END_PEG_POS = START_PEG_POS + PEG_DIST;
+
+			var TRIGGER_UM = 7; //um
+			var TRIGGER_WIDTH = 0.002; //ms, exposure time
+			var LINEAR_RESL = 0.1; // 不知道幹嘛用
+			var TRIGGER_COUNT = TRIGGER_UM / LINEAR_RESL;
+
+			_motionController.PEG_I_S(AY, TRIGGER_WIDTH, START_PEG_POS, TRIGGER_COUNT, END_PEG_POS);
+			MessageBox.Show("Ready GO");
+			var goPoint = PEG_DIST;// +TRIGGER_UM * 20;
+			_motionController.PEG_GoAndBack(AY, goPoint);
+		}
+
+		private void GrabImageButton_Click(object sender, EventArgs e)
+		{
+			_lineScan.SetPEGMode(4096, 4096);
+			_lineScan.StartGrab();
+		}
+
+		void _lineScan_On_GrabImageChanged(object sender, GrabImageEventArgs e)
+		{
+			var image = e.ViewModel as HImage;
+			viewPort.HalconWindow.DispObj(image);
+		}
+
+		void _lineScan_On_Loaded(object sender, GrabImageEventArgs e)
+		{
+			//throw new NotImplementedException();
+		}
+
+		void _lineScan_On_RunningMessage(object sender, GrabImageEventArgs e)
+		{
+			//throw new NotImplementedException();
+		}
+
+
+
 
 	}
 }

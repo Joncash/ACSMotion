@@ -5,6 +5,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionApp", "MotionApp\Moti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanbo.ACS", "Hanbo.ACS\Hanbo.ACS.csproj", "{968AE6AA-09AD-4CF7-8AA1-C158678ADB66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanbo.PEG.Helper", "..\ClassLibrary\Hanbo.PEG.Helper\Hanbo.PEG.Helper.csproj", "{82CB0A0D-7829-4B83-8455-F3FEB5E8F160}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanbo.Camera", "..\Hanbo.Camera\Hanbo.Camera\Hanbo.Camera.csproj", "{93FBF58B-E9E3-4C7B-B133-697F7110D423}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanbo.Helper", "..\ClassLibrary\Hanbo.Helper\Hanbo.Helper.csproj", "{7AC32BDF-F82E-4B5B-A6FD-A9B2CA5BCB4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanbo.Helper.Test", "..\ClassLibrary\Hanbo.Helper.Test\Hanbo.Helper.Test.csproj", "{8D1C08AD-EB56-4850-8D96-53CE0A47D898}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{403DD3A8-7754-4062-9E4E-BE56EFF015BD}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanbo.Models", "..\ClassLibrary\Hanbo.Models\Hanbo.Models.csproj", "{374ACC46-4C98-4DE9-8ED8-FBFEB769F1F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +36,26 @@ Global
 		{968AE6AA-09AD-4CF7-8AA1-C158678ADB66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{968AE6AA-09AD-4CF7-8AA1-C158678ADB66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{968AE6AA-09AD-4CF7-8AA1-C158678ADB66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82CB0A0D-7829-4B83-8455-F3FEB5E8F160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82CB0A0D-7829-4B83-8455-F3FEB5E8F160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82CB0A0D-7829-4B83-8455-F3FEB5E8F160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82CB0A0D-7829-4B83-8455-F3FEB5E8F160}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93FBF58B-E9E3-4C7B-B133-697F7110D423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93FBF58B-E9E3-4C7B-B133-697F7110D423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93FBF58B-E9E3-4C7B-B133-697F7110D423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93FBF58B-E9E3-4C7B-B133-697F7110D423}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AC32BDF-F82E-4B5B-A6FD-A9B2CA5BCB4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AC32BDF-F82E-4B5B-A6FD-A9B2CA5BCB4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AC32BDF-F82E-4B5B-A6FD-A9B2CA5BCB4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AC32BDF-F82E-4B5B-A6FD-A9B2CA5BCB4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D1C08AD-EB56-4850-8D96-53CE0A47D898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D1C08AD-EB56-4850-8D96-53CE0A47D898}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D1C08AD-EB56-4850-8D96-53CE0A47D898}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D1C08AD-EB56-4850-8D96-53CE0A47D898}.Release|Any CPU.Build.0 = Release|Any CPU
+		{374ACC46-4C98-4DE9-8ED8-FBFEB769F1F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{374ACC46-4C98-4DE9-8ED8-FBFEB769F1F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{374ACC46-4C98-4DE9-8ED8-FBFEB769F1F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{374ACC46-4C98-4DE9-8ED8-FBFEB769F1F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
