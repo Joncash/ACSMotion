@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace Hanbo.ACS
 {
+	public delegate void RunPEGCompletedDelegate(object sender, RunWorkerCompletedEventArgs e);
 	public class MotionAssistant
 	{
+		public event RunPEGCompletedDelegate On_PEGCompleted;
 		private MotionController _motionController;
 		private BackgroundWorker _bgWorker;
 		public MotionAssistant(MotionController motionController)
@@ -25,6 +27,10 @@ namespace Hanbo.ACS
 
 		void _bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			if (On_PEGCompleted != null)
+			{
+				On_PEGCompleted(sender, e);
+			}
 			//throw new NotImplementedException();
 		}
 

@@ -14,11 +14,44 @@ using Hanbo.Camera;
 using HalconDotNet;
 using Hanbo.Models;
 using Hanbo.PEG.Helper;
+using Hanbo.System.SingleInstance;
 
 namespace MotionApp
 {
+	//PEG
+	public delegate void RequestMergeImageDelegate();
+	//END PEG
+
 	public partial class MotionForm : Form
 	{
+		//PEG
+		public RequestMergeImageDelegate RequestMergeImage;
+
+		/// <summary>
+		/// Start PEG
+		/// </summary>
+		/// <param name="x">x way length (um)</param>
+		/// <param name="y">y way length (um)</param>
+		public void RequestPEGStart(int x, int y)
+		{
+			var width = x;
+			var height = y;
+			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec);
+			if (_motionAsit != null)
+			{
+				_motionAsit.RunPEG(1, MoveViewModel.xMoveLoop, MoveViewModel.YMovePixel
+					, MoveViewModel.XMovePixel);
+			}
+		}
+		void _motionAsit_On_PEGCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			if (RequestMergeImage != null)
+			{
+				RequestMergeImage();
+			}
+		}
+		//END PEG
+
 		private static Logger _log = NLog.LogManager.GetCurrentClassLogger();
 		private MotionController _motionController;
 		private MotionAssistant _motionAsit;
@@ -35,6 +68,9 @@ namespace MotionApp
 				HorizontalResolution = 4096,
 				VerticalResolution = 4096,
 			};
+
+			initilizeUIEnableStatus();
+			initializeMotionController();
 		}
 
 		private void initLineScan()
@@ -62,10 +98,9 @@ namespace MotionApp
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			initilizeUIEnableStatus();
-			initializeMotionController();
+
 			XPAxis_button.MouseUp += XAxis_button_MouseUp;
-			_motionController.Initialize(false);
+			//_motionController.Initialize(false);
 		}
 
 		private void Form1_Shown(object sender, EventArgs e)
@@ -74,8 +109,8 @@ namespace MotionApp
 			BackgroundWorker worker = new BackgroundWorker();
 			worker.DoWork += (caller, arg) =>
 			{
-				_motionController.AllAxisBackToZero();
-				moveToMeasurePosition();
+				//_motionController.AllAxisBackToZero();
+				//moveToMeasurePosition();
 			};
 			worker.RunWorkerAsync();
 		}
@@ -92,7 +127,7 @@ namespace MotionApp
 
 		private void initializeMotionController()
 		{
-			_motionController = new MotionController();
+			_motionController = DeviceController.GetMotionControllerInstance();
 			_motionController.On_AxisEnabled += _motionController_On_AxisEnabled;
 			_motionController.On_XAxisMoved += _motionController_On_XAxisMoved;
 			_motionController.On_YAxisMoved += _motionController_On_YAxisMoved;
@@ -103,7 +138,10 @@ namespace MotionApp
 			_motionController.On_ResetPositioned += _motionController_On_ResetPositioned;
 
 			_motionAsit = new MotionAssistant(_motionController);
+			_motionAsit.On_PEGCompleted += _motionAsit_On_PEGCompleted;
 		}
+
+
 
 		void _motionController_On_ErrorHanlder(object sender, System.Runtime.InteropServices.COMException exception)
 		{
@@ -162,9 +200,12 @@ namespace MotionApp
 
 		private void enableAllAxis()
 		{
-			_motionController.EnableAxis(Axis.X);
-			_motionController.EnableAxis(Axis.Y);
-			_motionController.EnableAxis(Axis.Z);
+			if (!_motionController.GetAxisEnableStatus(Axis.X))
+				_motionController.EnableAxis(Axis.X);
+			if (!_motionController.GetAxisEnableStatus(Axis.Y))
+				_motionController.EnableAxis(Axis.Y);
+			if (!_motionController.GetAxisEnableStatus(Axis.Z))
+				_motionController.EnableAxis(Axis.Z);
 			toolStripStatusLabel.Text = "Done";
 		}
 
@@ -455,8 +496,8 @@ namespace MotionApp
 		{
 			get
 			{
-				int xValue;
-				if (!Int32.TryParse(TableObjectXTextBox.Text, out xValue))
+				double xValue;
+				if (!Double.TryParse(TableObjectXTextBox.Text, out xValue))
 				{
 					xValue = (int)(CameraSpec.HorizontalResolution * CameraSpec.HorizontalPixelSize);
 				}
@@ -464,7 +505,7 @@ namespace MotionApp
 				{
 					xValue = xValue * 1000;//轉為 um
 				}
-				return xValue;
+				return (int)xValue;
 			}
 		}
 
@@ -475,8 +516,8 @@ namespace MotionApp
 		{
 			get
 			{
-				int yValue;
-				if (!Int32.TryParse(TableObjectYTextBox.Text, out yValue))
+				double yValue;
+				if (!Double.TryParse(TableObjectYTextBox.Text, out yValue))
 				{
 					yValue = (int)(CameraSpec.VerticalResolution * CameraSpec.VerticalPixelSize);
 				}
@@ -484,7 +525,7 @@ namespace MotionApp
 				{
 					yValue = yValue * 1000; //轉為 um
 				}
-				return yValue;
+				return (int)yValue;
 			}
 		}
 
@@ -570,8 +611,17 @@ namespace MotionApp
 
 		}
 
+		private void MotionForm_LocationChanged(object sender, EventArgs e)
+		{
+			var win = sender as MotionForm;
+			LoLabel.Text = String.Format("x:{0} y:{1}", win.Location.X, win.Location.Y);
+		}
 
 
+		public double[] GetObjectSize()
+		{
+			return new double[] { TableObjectXLength, TableObjectYLength };
+		}
 
 
 

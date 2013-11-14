@@ -28,7 +28,6 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.YAxis_label = new System.Windows.Forms.Label();
 			this.XAxis_textBox = new System.Windows.Forms.TextBox();
 			this.ZAxis_textBox = new System.Windows.Forms.TextBox();
 			this.YAxis_textBox = new System.Windows.Forms.TextBox();
@@ -73,6 +72,7 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.TableObjectXTextBox = new System.Windows.Forms.TextBox();
 			this.TableObjectYTextBox = new System.Windows.Forms.TextBox();
+			this.LoLabel = new System.Windows.Forms.Label();
 			this.statusStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.xMagnificationTrackBar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.yMagnificationTrackBar)).BeginInit();
@@ -86,48 +86,38 @@
 			this.MovePanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// YAxis_label
-			// 
-			this.YAxis_label.AutoSize = true;
-			this.YAxis_label.Location = new System.Drawing.Point(17, 105);
-			this.YAxis_label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.YAxis_label.Name = "YAxis_label";
-			this.YAxis_label.Size = new System.Drawing.Size(17, 17);
-			this.YAxis_label.TabIndex = 1;
-			this.YAxis_label.Text = "Y";
-			// 
 			// XAxis_textBox
 			// 
-			this.XAxis_textBox.Font = new System.Drawing.Font("Microsoft JhengHei", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-			this.XAxis_textBox.Location = new System.Drawing.Point(83, 13);
+			this.XAxis_textBox.Font = new System.Drawing.Font("Microsoft JhengHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+			this.XAxis_textBox.Location = new System.Drawing.Point(82, 113);
 			this.XAxis_textBox.Margin = new System.Windows.Forms.Padding(4);
 			this.XAxis_textBox.Name = "XAxis_textBox";
 			this.XAxis_textBox.ReadOnly = true;
-			this.XAxis_textBox.Size = new System.Drawing.Size(277, 61);
+			this.XAxis_textBox.Size = new System.Drawing.Size(256, 47);
 			this.XAxis_textBox.TabIndex = 3;
 			this.XAxis_textBox.Text = "0";
 			this.XAxis_textBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// ZAxis_textBox
 			// 
-			this.ZAxis_textBox.Font = new System.Drawing.Font("Microsoft JhengHei", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-			this.ZAxis_textBox.Location = new System.Drawing.Point(83, 162);
+			this.ZAxis_textBox.Font = new System.Drawing.Font("Microsoft JhengHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+			this.ZAxis_textBox.Location = new System.Drawing.Point(82, 233);
 			this.ZAxis_textBox.Margin = new System.Windows.Forms.Padding(4);
 			this.ZAxis_textBox.Name = "ZAxis_textBox";
 			this.ZAxis_textBox.ReadOnly = true;
-			this.ZAxis_textBox.Size = new System.Drawing.Size(277, 61);
+			this.ZAxis_textBox.Size = new System.Drawing.Size(256, 47);
 			this.ZAxis_textBox.TabIndex = 4;
 			this.ZAxis_textBox.Text = "0";
 			this.ZAxis_textBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// YAxis_textBox
 			// 
-			this.YAxis_textBox.Font = new System.Drawing.Font("Microsoft JhengHei", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-			this.YAxis_textBox.Location = new System.Drawing.Point(83, 88);
+			this.YAxis_textBox.Font = new System.Drawing.Font("Microsoft JhengHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+			this.YAxis_textBox.Location = new System.Drawing.Point(82, 173);
 			this.YAxis_textBox.Margin = new System.Windows.Forms.Padding(4);
 			this.YAxis_textBox.Name = "YAxis_textBox";
 			this.YAxis_textBox.ReadOnly = true;
-			this.YAxis_textBox.Size = new System.Drawing.Size(277, 61);
+			this.YAxis_textBox.Size = new System.Drawing.Size(256, 47);
 			this.YAxis_textBox.TabIndex = 5;
 			this.YAxis_textBox.Text = "0";
 			this.YAxis_textBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -139,10 +129,10 @@
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
             this.toolStripStatusLabel3});
-			this.statusStrip1.Location = new System.Drawing.Point(0, 474);
+			this.statusStrip1.Location = new System.Drawing.Point(0, 535);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-			this.statusStrip1.Size = new System.Drawing.Size(643, 25);
+			this.statusStrip1.Size = new System.Drawing.Size(349, 25);
 			this.statusStrip1.TabIndex = 7;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
@@ -169,7 +159,7 @@
 			// 
 			// xMagnificationTrackBar
 			// 
-			this.xMagnificationTrackBar.Location = new System.Drawing.Point(370, 16);
+			this.xMagnificationTrackBar.Location = new System.Drawing.Point(855, 18);
 			this.xMagnificationTrackBar.Margin = new System.Windows.Forms.Padding(4);
 			this.xMagnificationTrackBar.Name = "xMagnificationTrackBar";
 			this.xMagnificationTrackBar.Size = new System.Drawing.Size(172, 56);
@@ -178,7 +168,7 @@
 			// 
 			// yMagnificationTrackBar
 			// 
-			this.yMagnificationTrackBar.Location = new System.Drawing.Point(370, 90);
+			this.yMagnificationTrackBar.Location = new System.Drawing.Point(855, 92);
 			this.yMagnificationTrackBar.Margin = new System.Windows.Forms.Padding(4);
 			this.yMagnificationTrackBar.Name = "yMagnificationTrackBar";
 			this.yMagnificationTrackBar.Size = new System.Drawing.Size(172, 56);
@@ -187,7 +177,7 @@
 			// 
 			// zMagnificationTrackBar
 			// 
-			this.zMagnificationTrackBar.Location = new System.Drawing.Point(370, 160);
+			this.zMagnificationTrackBar.Location = new System.Drawing.Point(855, 162);
 			this.zMagnificationTrackBar.Margin = new System.Windows.Forms.Padding(4);
 			this.zMagnificationTrackBar.Name = "zMagnificationTrackBar";
 			this.zMagnificationTrackBar.Size = new System.Drawing.Size(172, 56);
@@ -201,7 +191,7 @@
             0,
             0,
             0});
-			this.xSpeedUnitDropDown.Location = new System.Drawing.Point(550, 16);
+			this.xSpeedUnitDropDown.Location = new System.Drawing.Point(1035, 18);
 			this.xSpeedUnitDropDown.Margin = new System.Windows.Forms.Padding(4);
 			this.xSpeedUnitDropDown.Maximum = new decimal(new int[] {
             100000,
@@ -229,7 +219,7 @@
             0,
             0,
             0});
-			this.ySpeedUnitDropDown.Location = new System.Drawing.Point(550, 90);
+			this.ySpeedUnitDropDown.Location = new System.Drawing.Point(1035, 92);
 			this.ySpeedUnitDropDown.Margin = new System.Windows.Forms.Padding(4);
 			this.ySpeedUnitDropDown.Maximum = new decimal(new int[] {
             100000,
@@ -257,7 +247,7 @@
             0,
             0,
             0});
-			this.zSpeedUnitDropDown.Location = new System.Drawing.Point(550, 164);
+			this.zSpeedUnitDropDown.Location = new System.Drawing.Point(1035, 166);
 			this.zSpeedUnitDropDown.Margin = new System.Windows.Forms.Padding(4);
 			this.zSpeedUnitDropDown.Maximum = new decimal(new int[] {
             100000,
@@ -281,7 +271,7 @@
 			// zAxisPicture
 			// 
 			this.zAxisPicture.Image = global::MotionApp.Properties.Resources.Letter_Z_grey_icon1;
-			this.zAxisPicture.Location = new System.Drawing.Point(11, 164);
+			this.zAxisPicture.Location = new System.Drawing.Point(10, 237);
 			this.zAxisPicture.Margin = new System.Windows.Forms.Padding(4);
 			this.zAxisPicture.Name = "zAxisPicture";
 			this.zAxisPicture.Size = new System.Drawing.Size(48, 48);
@@ -292,7 +282,7 @@
 			// yAxisPicture
 			// 
 			this.yAxisPicture.Image = global::MotionApp.Properties.Resources.Letter_Y_grey_icon;
-			this.yAxisPicture.Location = new System.Drawing.Point(11, 90);
+			this.yAxisPicture.Location = new System.Drawing.Point(10, 177);
 			this.yAxisPicture.Margin = new System.Windows.Forms.Padding(4);
 			this.yAxisPicture.Name = "yAxisPicture";
 			this.yAxisPicture.Size = new System.Drawing.Size(48, 48);
@@ -303,7 +293,7 @@
 			// xAxisPicture
 			// 
 			this.xAxisPicture.Image = global::MotionApp.Properties.Resources.Letter_X_grey_icon;
-			this.xAxisPicture.Location = new System.Drawing.Point(11, 13);
+			this.xAxisPicture.Location = new System.Drawing.Point(10, 113);
 			this.xAxisPicture.Margin = new System.Windows.Forms.Padding(4);
 			this.xAxisPicture.Name = "xAxisPicture";
 			this.xAxisPicture.Size = new System.Drawing.Size(48, 48);
@@ -373,7 +363,7 @@
 			// ZNAxis_button
 			// 
 			this.ZNAxis_button.Image = global::MotionApp.Properties.Resources._7;
-			this.ZNAxis_button.Location = new System.Drawing.Point(244, 8);
+			this.ZNAxis_button.Location = new System.Drawing.Point(232, 8);
 			this.ZNAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.ZNAxis_button.Name = "ZNAxis_button";
 			this.ZNAxis_button.Size = new System.Drawing.Size(64, 64);
@@ -409,7 +399,7 @@
 			// ServoOff_button
 			// 
 			this.ServoOff_button.Image = global::MotionApp.Properties.Resources.servoOff;
-			this.ServoOff_button.Location = new System.Drawing.Point(11, 392);
+			this.ServoOff_button.Location = new System.Drawing.Point(716, 390);
 			this.ServoOff_button.Margin = new System.Windows.Forms.Padding(4);
 			this.ServoOff_button.Name = "ServoOff_button";
 			this.ServoOff_button.Size = new System.Drawing.Size(64, 64);
@@ -420,7 +410,7 @@
 			// Init_button
 			// 
 			this.Init_button.Image = global::MotionApp.Properties.Resources.init;
-			this.Init_button.Location = new System.Drawing.Point(11, 248);
+			this.Init_button.Location = new System.Drawing.Point(524, 390);
 			this.Init_button.Margin = new System.Windows.Forms.Padding(4);
 			this.Init_button.Name = "Init_button";
 			this.Init_button.Size = new System.Drawing.Size(64, 64);
@@ -431,7 +421,7 @@
 			// ZPAxis_button
 			// 
 			this.ZPAxis_button.Image = global::MotionApp.Properties.Resources._3;
-			this.ZPAxis_button.Location = new System.Drawing.Point(244, 153);
+			this.ZPAxis_button.Location = new System.Drawing.Point(232, 157);
 			this.ZPAxis_button.Margin = new System.Windows.Forms.Padding(4);
 			this.ZPAxis_button.Name = "ZPAxis_button";
 			this.ZPAxis_button.Size = new System.Drawing.Size(64, 64);
@@ -466,7 +456,7 @@
 			// ServoOn_button
 			// 
 			this.ServoOn_button.Image = global::MotionApp.Properties.Resources.servoOn;
-			this.ServoOn_button.Location = new System.Drawing.Point(11, 319);
+			this.ServoOn_button.Location = new System.Drawing.Point(620, 390);
 			this.ServoOn_button.Margin = new System.Windows.Forms.Padding(4);
 			this.ServoOn_button.Name = "ServoOn_button";
 			this.ServoOn_button.Size = new System.Drawing.Size(64, 64);
@@ -476,10 +466,10 @@
 			// 
 			// PEGMoveButton
 			// 
-			this.PEGMoveButton.Location = new System.Drawing.Point(412, 392);
+			this.PEGMoveButton.Location = new System.Drawing.Point(240, 8);
 			this.PEGMoveButton.Margin = new System.Windows.Forms.Padding(4);
 			this.PEGMoveButton.Name = "PEGMoveButton";
-			this.PEGMoveButton.Size = new System.Drawing.Size(216, 58);
+			this.PEGMoveButton.Size = new System.Drawing.Size(98, 82);
 			this.PEGMoveButton.TabIndex = 36;
 			this.PEGMoveButton.Text = "Scan";
 			this.PEGMoveButton.UseVisualStyleBackColor = true;
@@ -545,6 +535,7 @@
 			// 
 			// MovePanel
 			// 
+			this.MovePanel.Controls.Add(this.LoLabel);
 			this.MovePanel.Controls.Add(this.resetPostionBtn);
 			this.MovePanel.Controls.Add(this.XPAxis_button);
 			this.MovePanel.Controls.Add(this.YPAxis_button);
@@ -556,7 +547,7 @@
 			this.MovePanel.Controls.Add(this.XPYNAxis_button);
 			this.MovePanel.Controls.Add(this.ZNAxis_button);
 			this.MovePanel.Controls.Add(this.ZPAxis_button);
-			this.MovePanel.Location = new System.Drawing.Point(77, 240);
+			this.MovePanel.Location = new System.Drawing.Point(10, 302);
 			this.MovePanel.Name = "MovePanel";
 			this.MovePanel.Size = new System.Drawing.Size(328, 221);
 			this.MovePanel.TabIndex = 44;
@@ -574,7 +565,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(411, 248);
+			this.label3.Location = new System.Drawing.Point(13, 3);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(159, 17);
 			this.label3.TabIndex = 47;
@@ -583,7 +574,7 @@
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(411, 319);
+			this.label4.Location = new System.Drawing.Point(13, 48);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(159, 17);
 			this.label4.TabIndex = 48;
@@ -591,7 +582,7 @@
 			// 
 			// TableObjectXTextBox
 			// 
-			this.TableObjectXTextBox.Location = new System.Drawing.Point(414, 268);
+			this.TableObjectXTextBox.Location = new System.Drawing.Point(16, 23);
 			this.TableObjectXTextBox.Name = "TableObjectXTextBox";
 			this.TableObjectXTextBox.Size = new System.Drawing.Size(214, 22);
 			this.TableObjectXTextBox.TabIndex = 49;
@@ -599,17 +590,26 @@
 			// 
 			// TableObjectYTextBox
 			// 
-			this.TableObjectYTextBox.Location = new System.Drawing.Point(414, 339);
+			this.TableObjectYTextBox.Location = new System.Drawing.Point(16, 68);
 			this.TableObjectYTextBox.Name = "TableObjectYTextBox";
 			this.TableObjectYTextBox.Size = new System.Drawing.Size(214, 22);
 			this.TableObjectYTextBox.TabIndex = 50;
 			this.TableObjectYTextBox.TextChanged += new System.EventHandler(this.TableObjectYTextBox_TextChanged);
 			// 
+			// LoLabel
+			// 
+			this.LoLabel.AutoSize = true;
+			this.LoLabel.Location = new System.Drawing.Point(240, 103);
+			this.LoLabel.Name = "LoLabel";
+			this.LoLabel.Size = new System.Drawing.Size(46, 17);
+			this.LoLabel.TabIndex = 51;
+			this.LoLabel.Text = "label5";
+			// 
 			// MotionForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(643, 499);
+			this.ClientSize = new System.Drawing.Size(349, 560);
 			this.Controls.Add(this.TableObjectYTextBox);
 			this.Controls.Add(this.TableObjectXTextBox);
 			this.Controls.Add(this.label4);
@@ -639,13 +639,13 @@
 			this.Controls.Add(this.YAxis_textBox);
 			this.Controls.Add(this.ZAxis_textBox);
 			this.Controls.Add(this.XAxis_textBox);
-			this.Controls.Add(this.YAxis_label);
 			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "MotionForm";
-			this.Text = "MotionForm";
+			this.Text = "Motion";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_Closing);
 			this.Load += new System.EventHandler(this.Form1_Load);
 			this.Shown += new System.EventHandler(this.Form1_Shown);
+			this.LocationChanged += new System.EventHandler(this.MotionForm_LocationChanged);
 			this.statusStrip1.ResumeLayout(false);
 			this.statusStrip1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.xMagnificationTrackBar)).EndInit();
@@ -658,6 +658,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.yAxisPicture)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.xAxisPicture)).EndInit();
 			this.MovePanel.ResumeLayout(false);
+			this.MovePanel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -665,7 +666,6 @@
 
 		#endregion
 
-		private System.Windows.Forms.Label YAxis_label;
 		private System.Windows.Forms.TextBox XAxis_textBox;
 		private System.Windows.Forms.TextBox ZAxis_textBox;
 		private System.Windows.Forms.TextBox YAxis_textBox;
@@ -710,6 +710,7 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox TableObjectXTextBox;
 		private System.Windows.Forms.TextBox TableObjectYTextBox;
+		private System.Windows.Forms.Label LoLabel;
 	}
 }
 

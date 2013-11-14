@@ -259,6 +259,17 @@ namespace Hanbo.ACS
 				_log.Error("EnableAxis, Error={0}", ex.StackTrace);
 			}
 		}
+		public bool GetAxisEnableStatus(Axis axis)
+		{
+			int axisInt = (int)axis;
+			var enabled = _ch.GetMotorState(axisInt) == 536870929;
+			var msg = (enabled) ? "Success" : "Fail";
+			if (On_AxisEnabled != null)
+			{
+				On_AxisEnabled(null, new EnabledResultViewModel() { Axis = axis, Message = msg });
+			}
+			return enabled;
+		}
 
 		/// <summary>
 		/// 單軸移動
@@ -542,5 +553,17 @@ namespace Hanbo.ACS
 		}
 
 
+
+		public void RemoveAllRegisterEvent()
+		{
+			On_AxisEnabled = null;
+			On_XAxisMoved = null;
+			On_YAxisMoved = null;
+			On_ZAxisMoved = null;
+			On_ErrorHandler = null;
+			On_AllAxisDisabled = null;
+			On_MotionInited = null;
+			On_ResetPositioned = null;
+		}
 	}
 }
