@@ -24,11 +24,17 @@ namespace MotionApp
 
 	public partial class MotionForm : Form
 	{
-		//PEG
-		public RequestMergeImageDelegate RequestMergeImage;
+		#region Delegates
 
 		/// <summary>
-		/// Start PEG
+		/// 合併影像 Delegate
+		/// </summary>
+		public RequestMergeImageDelegate RequestMergeImage;
+		#endregion
+
+		#region PEG public methods
+		/// <summary>
+		/// 送出要求啟動 PEG 訊號
 		/// </summary>
 		/// <param name="x">x way length (um)</param>
 		/// <param name="y">y way length (um)</param>
@@ -43,19 +49,26 @@ namespace MotionApp
 					, MoveViewModel.XMovePixel);
 			}
 		}
-		void _motionAsit_On_PEGCompleted(object sender, RunWorkerCompletedEventArgs e)
+		#endregion
+
+		#region PEG private methods
+		private void _motionAsit_On_PEGCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			if (RequestMergeImage != null)
 			{
 				RequestMergeImage();
 			}
 		}
-		//END PEG
+		#endregion
 
+		#region private variables
 		private static Logger _log = NLog.LogManager.GetCurrentClassLogger();
 		private MotionController _motionController;
 		private MotionAssistant _motionAsit;
 		private LineScan _lineScan;// = new LineScan();
+		#endregion
+
+		#region 建構子
 		public MotionForm()
 		{
 			InitializeComponent();
@@ -72,7 +85,28 @@ namespace MotionApp
 			initilizeUIEnableStatus();
 			initializeMotionController();
 		}
+		#endregion
 
+		#region Form Events
+		private void Form1_Load(object sender, EventArgs e)
+		{
+			XPAxis_button.MouseUp += XAxis_button_MouseUp;
+			//_motionController.Initialize(false);
+		}
+		private void Form1_Shown(object sender, EventArgs e)
+		{
+			enableAllAxis();
+			BackgroundWorker worker = new BackgroundWorker();
+			worker.DoWork += (caller, arg) =>
+			{
+				//_motionController.AllAxisBackToZero();
+				//moveToMeasurePosition();
+			};
+			worker.RunWorkerAsync();
+		}
+		#endregion
+
+		#region private methods
 		private void initLineScan()
 		{
 			_lineScan = new LineScan();
@@ -80,7 +114,6 @@ namespace MotionApp
 			_lineScan.On_Loaded += _lineScan_On_Loaded;
 			_lineScan.On_GrabImageChanged += _lineScan_On_GrabImageChanged;
 		}
-
 		private void initilizeUIEnableStatus()
 		{
 			XNYPAxis_button.Enabled = false;
@@ -95,26 +128,27 @@ namespace MotionApp
 			ZPAxis_button.Enabled = false;
 			ZNAxis_button.Enabled = false;
 		}
-
-		private void Form1_Load(object sender, EventArgs e)
+		private void enableAllAxis()
 		{
-
-			XPAxis_button.MouseUp += XAxis_button_MouseUp;
-			//_motionController.Initialize(false);
+			if (!_motionController.GetAxisEnableStatus(Axis.X))
+				_motionController.EnableAxis(Axis.X);
+			if (!_motionController.GetAxisEnableStatus(Axis.Y))
+				_motionController.EnableAxis(Axis.Y);
+			if (!_motionController.GetAxisEnableStatus(Axis.Z))
+				_motionController.EnableAxis(Axis.Z);
+			toolStripStatusLabel.Text = "Done";
 		}
-
-		private void Form1_Shown(object sender, EventArgs e)
+		private void MultipleAxisMove(Direction xDir, Direction yDir)
 		{
-			enableAllAxis();
-			BackgroundWorker worker = new BackgroundWorker();
-			worker.DoWork += (caller, arg) =>
-			{
-				//_motionController.AllAxisBackToZero();
-				//moveToMeasurePosition();
-			};
-			worker.RunWorkerAsync();
+			yAxisPicture.Image = MotionApp.Properties.Resources.Letter_Y_lg_icon;
+			xAxisPicture.Image = MotionApp.Properties.Resources.Letter_X_lg_icon;
+			var xVelocity = xMagnificationTrackBar.Value * (int)xSpeedUnitDropDown.Value;
+			var yVelocity = yMagnificationTrackBar.Value * (int)ySpeedUnitDropDown.Value;
+			_motionController.MultipleAxisMove(new Axis[] { Axis.X, Axis.Y }, new Direction[] { xDir, yDir }, Math.Min(xVelocity, yVelocity));
 		}
+		#endregion
 
+		#region MotionController methods
 		private void moveToMeasurePosition()
 		{
 			_motionController.GoMeasurePosition();
@@ -141,9 +175,7 @@ namespace MotionApp
 			_motionAsit.On_PEGCompleted += _motionAsit_On_PEGCompleted;
 		}
 
-
-
-		void _motionController_On_ErrorHanlder(object sender, System.Runtime.InteropServices.COMException exception)
+		private void _motionController_On_ErrorHanlder(object sender, System.Runtime.InteropServices.COMException exception)
 		{
 			string errorMessage = "Error from " + exception.Source + "\n\r";
 			errorMessage = errorMessage + exception.Message + "\n\r";
@@ -151,7 +183,6 @@ namespace MotionApp
 			_log.Error(errorMessage);
 			MessageBox.Show(errorMessage);
 		}
-
 
 		/// <summary>
 		/// 當各軸已Enabled狀態時，回應至UI
@@ -189,6 +220,101 @@ namespace MotionApp
 		}
 
 		/// <summary>
+		/// 各軸歸零後之Callback
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="eventArgs"></param>
+		private void _motionController_On_ResetPositioned(object sender, string eventArgs)
+		{
+			toolStripStatusLabel1.Text = eventArgs;
+		}
+
+		/// <summary>
+		/// 與機器進行連線溝通後之Callback
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="eventArgs"></param>
+		private void _motionController_On_MotionInited(object sender, string eventArgs)
+		{
+			toolStripStatusLabel.Text = eventArgs;
+		}
+
+		/// <summary>
+		/// 關閉所有的軸之Callback。切斷與機器下達指令之連接之Callback。
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="eventArgs"></param>
+		private void _motionController_On_AllAxisDisabled(object sender, string eventArgs)
+		{
+			toolStripStatusLabel.Text = eventArgs;
+		}
+		#endregion
+
+		#region Form UI InterActive Methods
+
+		/// <summary>
+		/// Scan Button
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void PEGMoveButton_Click(object sender, EventArgs e)
+		{
+			var width = TableObjectXLength;
+			var height = TableObjectYLength;
+			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec);
+			if (_motionAsit != null)
+			{
+				_motionAsit.RunPEG(1, MoveViewModel.xMoveLoop, MoveViewModel.YMovePixel
+					, MoveViewModel.XMovePixel);
+			}
+		}
+
+		/// <summary>
+		/// 受測物 Y 方向文字方塊
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void TableObjectYTextBox_TextChanged(object sender, EventArgs e)
+		{
+			var txtbox = sender as TextBox;
+			int length;
+			if (!Int32.TryParse(txtbox.Text, out length))
+			{
+				//CameraSpec.VerticalResolution = 4096;
+				MessageBox.Show("請輸入受測物 Y 方向大小(mm)");
+			}
+			else
+			{
+				var resolution = Math.Round((length * 1000) / CameraSpec.VerticalPixelSize);
+				CameraSpec.VerticalResolution = (int)resolution;
+			}
+		}
+
+		/// <summary>
+		/// 受測物 X 方向文字方塊
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void TableObjectXTextBox_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		/// <summary>
+		/// Motion Form 位置移動
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MotionForm_LocationChanged(object sender, EventArgs e)
+		{
+			var win = sender as MotionForm;
+			/*
+			LoLabel.Text = String.Format("x:{0} y:{1}", win.Location.X, win.Location.Y);
+			LoLabel.Visible = true;
+			 */
+		}
+
+		/// <summary>
 		/// 將各軸呈顯 Enabled 狀態，與機器連線，準備下達指令。
 		/// </summary>
 		/// <param name="sender"></param>
@@ -196,17 +322,6 @@ namespace MotionApp
 		private void ServoOn_button_Click(object sender, EventArgs e)
 		{
 			enableAllAxis();
-		}
-
-		private void enableAllAxis()
-		{
-			if (!_motionController.GetAxisEnableStatus(Axis.X))
-				_motionController.EnableAxis(Axis.X);
-			if (!_motionController.GetAxisEnableStatus(Axis.Y))
-				_motionController.EnableAxis(Axis.Y);
-			if (!_motionController.GetAxisEnableStatus(Axis.Z))
-				_motionController.EnableAxis(Axis.Z);
-			toolStripStatusLabel.Text = "Done";
 		}
 
 		/// <summary>
@@ -423,14 +538,7 @@ namespace MotionApp
 			MultipleAxisMove(Direction.POSITIVE, Direction.NEGATIVE);
 		}
 
-		private void MultipleAxisMove(Direction xDir, Direction yDir)
-		{
-			yAxisPicture.Image = MotionApp.Properties.Resources.Letter_Y_lg_icon;
-			xAxisPicture.Image = MotionApp.Properties.Resources.Letter_X_lg_icon;
-			var xVelocity = xMagnificationTrackBar.Value * (int)xSpeedUnitDropDown.Value;
-			var yVelocity = yMagnificationTrackBar.Value * (int)ySpeedUnitDropDown.Value;
-			_motionController.MultipleAxisMove(new Axis[] { Axis.X, Axis.Y }, new Direction[] { xDir, yDir }, Math.Min(xVelocity, yVelocity));
-		}
+
 
 		/// <summary>
 		/// 將X、Y、Z軸，歸零
@@ -443,48 +551,7 @@ namespace MotionApp
 			//_motionController.AxisBackToZero(1);
 			//_motionController.AxisBackToZero(2);
 		}
-
-		/// <summary>
-		/// 各軸歸零後之Callback
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="eventArgs"></param>
-		void _motionController_On_ResetPositioned(object sender, string eventArgs)
-		{
-			toolStripStatusLabel1.Text = eventArgs;
-		}
-
-		/// <summary>
-		/// 與機器進行連線溝通後之Callback
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="eventArgs"></param>
-		void _motionController_On_MotionInited(object sender, string eventArgs)
-		{
-			toolStripStatusLabel.Text = eventArgs;
-		}
-
-		/// <summary>
-		/// 關閉所有的軸之Callback。切斷與機器下達指令之連接之Callback。
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="eventArgs"></param>
-		void _motionController_On_AllAxisDisabled(object sender, string eventArgs)
-		{
-			toolStripStatusLabel.Text = eventArgs;
-		}
-
-		private void PEGMoveButton_Click(object sender, EventArgs e)
-		{
-			var width = TableObjectXLength;
-			var height = TableObjectYLength;
-			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec);
-			if (_motionAsit != null)
-			{
-				_motionAsit.RunPEG(1, MoveViewModel.xMoveLoop, MoveViewModel.YMovePixel
-					, MoveViewModel.XMovePixel);
-			}
-		}
+		#endregion
 
 		#region Public API
 		public CameraSpecViewModel CameraSpec { get; set; }
@@ -533,6 +600,7 @@ namespace MotionApp
 
 		#endregion
 
+		#region UI Proprities
 		public int XLoop
 		{
 			get
@@ -553,6 +621,8 @@ namespace MotionApp
 				return x;
 			}
 		}
+		#endregion
+
 
 		#region 測試區
 		double SS;
@@ -589,35 +659,12 @@ namespace MotionApp
 		}
 		#endregion
 
-		private void TableObjectYTextBox_TextChanged(object sender, EventArgs e)
-		{
-			var txtbox = sender as TextBox;
-			int length;
-			if (!Int32.TryParse(txtbox.Text, out length))
-			{
-				CameraSpec.VerticalResolution = 4096;
-			}
-			else
-			{
-				var resolution = Math.Round((length * 1000) / CameraSpec.VerticalPixelSize);
-				CameraSpec.VerticalResolution = (int)resolution;
-			}
+		
 
-
-		}
-
-		private void TableObjectXTextBox_TextChanged(object sender, EventArgs e)
-		{
-
-		}
-
-		private void MotionForm_LocationChanged(object sender, EventArgs e)
-		{
-			var win = sender as MotionForm;
-			LoLabel.Text = String.Format("x:{0} y:{1}", win.Location.X, win.Location.Y);
-		}
-
-
+		/// <summary>
+		/// 取得影像大小
+		/// </summary>
+		/// <returns></returns>
 		public double[] GetObjectSize()
 		{
 			return new double[] { TableObjectXLength, TableObjectYLength };
