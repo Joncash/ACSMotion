@@ -15,10 +15,11 @@ namespace Hanbo.ACS
 		private static Logger _log = NLog.LogManager.GetCurrentClassLogger();
 		private string _motionControllerIP = "10.0.0.100";
 		private BackgroundWorker _bgworker = new BackgroundWorker();
-		private BackgroundWorker _bgworkerForAllAxis = new BackgroundWorker();
+		private BackgroundWorker _bgworkerForDetectAxisPostion = new BackgroundWorker();
 		private SPIIPLUSCOM660Lib.Channel _ch;
 		private const double m_VelocityUnit = 50000;
 		private int _waitTimeout = 40000;
+		private int _positionDetectionSleepTime = 500;
 
 		public event AxisEnableEventHandler On_AxisEnabled;
 		public event XAxisMoveEventHandler On_XAxisMoved;
@@ -38,7 +39,7 @@ namespace Hanbo.ACS
 		public MotionController()
 		{
 			//init backgroundworker
-			initialize();
+			init();
 		}
 
 		/// <summary>
@@ -48,10 +49,10 @@ namespace Hanbo.ACS
 		public MotionController(string motionControllerIP)
 		{
 			_motionControllerIP = motionControllerIP;
-			initialize();
+			init();
 		}
 
-		private void initialize()
+		private void init()
 		{
 			_bgworker.WorkerReportsProgress = true;
 			_bgworker.WorkerSupportsCancellation = true;
@@ -59,46 +60,47 @@ namespace Hanbo.ACS
 			_bgworker.ProgressChanged += _bgworker_ProgressChanged;
 			_bgworker.RunWorkerCompleted += _bgworker_RunWorkerCompleted;
 
-			_bgworkerForAllAxis.WorkerReportsProgress = true;
-			_bgworkerForAllAxis.WorkerSupportsCancellation = true;
-			_bgworkerForAllAxis.DoWork += _bgworkerForAxis_DoWork;
-			_bgworkerForAllAxis.ProgressChanged += _bgworkerForAxis_ProgressChanged;
-			_bgworkerForAllAxis.RunWorkerCompleted += _bgworkerForAxis_RunWorkerCompleted;
+			//偵測移動
+			_bgworkerForDetectAxisPostion.WorkerReportsProgress = true;
+			_bgworkerForDetectAxisPostion.WorkerSupportsCancellation = true;
+			_bgworkerForDetectAxisPostion.DoWork += _bgworkerForAxis_DoWork;
+			_bgworkerForDetectAxisPostion.ProgressChanged += _bgworkerForAxis_ProgressChanged;
+			_bgworkerForDetectAxisPostion.RunWorkerCompleted += _bgworkerForAxis_RunWorkerCompleted;
 		}
 
-
+		#region Background Methods, for 偵測位置
 		void _bgworkerForAxis_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			throw new NotImplementedException();
+			//ToDO
+			//throw new NotImplementedException();
 		}
 		void _bgworkerForAxis_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
-			if (On_XAxisMoved != null)
+			var axis = e.ProgressPercentage;
+			var position = (double)e.UserState;
+			switch (axis)
 			{
-				On_XAxisMoved(null, _ch.GetFPosition((int)Axis.X));
+				case (int)Axis.X:
+					if (On_XAxisMoved != null)
+					{
+						On_XAxisMoved(null, position);
+					}
+					break;
+				case (int)Axis.Y:
+					if (On_YAxisMoved != null)
+					{
+						On_YAxisMoved(null, position);
+					}
+					break;
+				case (int)Axis.Z:
+					if (On_ZAxisMoved != null)
+					{
+						On_ZAxisMoved(null, position);
+					}
+					break;
 			}
-
-			if (On_YAxisMoved != null)
-			{
-				On_YAxisMoved(null, _ch.GetFPosition((int)Axis.Y));
-			}
-
-			if (On_ZAxisMoved != null)
-			{
-				On_ZAxisMoved(null, _ch.GetFPosition((int)Axis.Z));
-			}
-
-
 		}
 
-		/// <summary>
-		/// 不斷的與機器取得目前各軸的Position之背景處理
-		/// </summary>
-		public void StartDetection()
-		{
-			if (!_bgworkerForAllAxis.IsBusy)
-				_bgworkerForAllAxis.RunWorkerAsync();
-		}
 		void _bgworkerForAxis_DoWork(object sender, DoWorkEventArgs e)
 		{
 			var worker = sender as BackgroundWorker;
@@ -111,11 +113,28 @@ namespace Hanbo.ACS
 				}
 				else
 				{
-					worker.ReportProgress(1);
-					Thread.Sleep(500);
+					
+					var yPosition = _ch.GetFPosition((int)Axis.Y);
+					worker.ReportProgress((int)Axis.Y, yPosition);
+					//var xPosition = _ch.GetFPosition((int)Axis.X);
+					//worker.ReportProgress((int)Axis.X, xPosition);
+					//var zPosition = _ch.GetFPosition((int)Axis.Z);
+					//worker.ReportProgress(1);
+					Thread.Sleep(_positionDetectionSleepTime);
 				}
 			}
 		}
+		#endregion
+
+		/// <summary>
+		/// 不斷的與機器取得目前各軸的Position之背景處理
+		/// </summary>
+		public void StartDetection()
+		{
+			if (!_bgworkerForDetectAxisPostion.IsBusy)
+				_bgworkerForDetectAxisPostion.RunWorkerAsync();
+		}
+
 
 		/// <summary>
 		/// 與機器進行連線溝通
@@ -141,8 +160,6 @@ namespace Hanbo.ACS
 				{
 					On_MotionInited(null, "Initialize Complete...");
 				}
-
-
 			}
 			catch (COMException ex)
 			{
@@ -526,10 +543,17 @@ namespace Hanbo.ACS
 		public void PTP_RE(int axis, double point)
 		{
 			int flags = _ch.ACSC_AMF_RELATIVE;
-			_ch.ToPoint(flags, axis, point);
-			//_ch.WaitMotionEnd(axis, 200000);
-			_ch.EndSequence(axis);
-			_ch.WaitMotionEnd(axis, 20000);
+			try
+			{
+				_ch.ToPoint(flags, axis, point);
+				//_ch.WaitMotionEnd(axis, 200000);
+				_ch.EndSequence(axis);
+				_ch.WaitMotionEnd(axis, 20000);
+			}
+			catch (Exception ex)
+			{
+				//ToDo
+			}
 		}
 		public void PEG_GoAndBack(int axis, double point)
 		{
