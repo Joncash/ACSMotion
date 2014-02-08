@@ -15,6 +15,8 @@ using HalconDotNet;
 using Hanbo.Models;
 using Hanbo.PEG.Helper;
 using Hanbo.System.SingleInstance;
+using Hanbo.Helper;
+using System.IO;
 
 namespace MotionApp
 {
@@ -42,10 +44,10 @@ namespace MotionApp
 		{
 			var width = x;
 			var height = y;
-			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec);
+			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec, true);
 			if (_motionAsit != null)
 			{
-				_motionAsit.RunPEG(1, MoveViewModel.xMoveLoop, MoveViewModel.YMovePixel
+				_motionAsit.RunPEG(MoveViewModel.YMoveLoop, MoveViewModel.XMoveLoop, MoveViewModel.YMovePixel
 					, MoveViewModel.XMovePixel);
 			}
 		}
@@ -74,13 +76,7 @@ namespace MotionApp
 			InitializeComponent();
 			TableObjectXTextBox.Enabled = false;
 			//initLineScan();
-			CameraSpec = new CameraSpecViewModel()
-			{
-				HorizontalPixelSize = 7,
-				VerticalPixelSize = 7,
-				HorizontalResolution = 4096,
-				VerticalResolution = 4096,
-			};
+			CameraSpec = ConfigurationHelper.GetCameraSpec();
 
 			initilizeUIEnableStatus();
 			initializeMotionController();
@@ -95,7 +91,8 @@ namespace MotionApp
 		}
 		private void Form1_Shown(object sender, EventArgs e)
 		{
-			enableAllAxis();
+			//enableAllAxis();
+			enableYAxisOnly();
 			BackgroundWorker worker = new BackgroundWorker();
 			worker.DoWork += (caller, arg) =>
 			{
@@ -128,12 +125,21 @@ namespace MotionApp
 			ZPAxis_button.Enabled = false;
 			ZNAxis_button.Enabled = false;
 		}
+		private void enableYAxisOnly()
+		{
+			if (!_motionController.GetAxisEnableStatus(Axis.Y))
+				_motionController.EnableAxis(Axis.Y);
+
+			toolStripStatusLabel.Text = "Done";
+		}
 		private void enableAllAxis()
 		{
 			if (!_motionController.GetAxisEnableStatus(Axis.X))
 				_motionController.EnableAxis(Axis.X);
+
 			if (!_motionController.GetAxisEnableStatus(Axis.Y))
 				_motionController.EnableAxis(Axis.Y);
+
 			if (!_motionController.GetAxisEnableStatus(Axis.Z))
 				_motionController.EnableAxis(Axis.Z);
 			toolStripStatusLabel.Text = "Done";
@@ -191,7 +197,7 @@ namespace MotionApp
 		/// <param name="eventArgs"></param>
 		private void _motionController_On_AxisEnabled(object sender, object eventArgs)
 		{
-			Thread.Sleep(1000);
+			//Thread.Sleep(1000);//why
 			var vm = eventArgs as EnabledResultViewModel;
 			switch (vm.Axis)
 			{
@@ -200,23 +206,26 @@ namespace MotionApp
 					break;
 				case Axis.Y:
 					toolStripStatusLabel2.Text = vm.Axis + " Enabled.....";
+					YPAxis_button.Enabled = true;
+					YNAxis_button.Enabled = true;
 					break;
 				case Axis.Z:
 					toolStripStatusLabel3.Text = vm.Axis + " Enabled.....";
 					break;
 			}
 			_motionController.StartDetection();
+
+			/* X, Z 軸
 			XNYPAxis_button.Enabled = true;
-			YPAxis_button.Enabled = true;
 			XPYPAxis_button.Enabled = true;
 			XPAxis_button.Enabled = true;
 			XPYNAxis_button.Enabled = true;
-			YNAxis_button.Enabled = true;
 			XNYNAxis_button.Enabled = true;
 			XNAxis_button.Enabled = true;
-			resetPostionBtn.Enabled = true;
 			ZPAxis_button.Enabled = true;
 			ZNAxis_button.Enabled = true;
+			*/
+			resetPostionBtn.Enabled = true;
 		}
 
 		/// <summary>
@@ -259,12 +268,22 @@ namespace MotionApp
 		/// <param name="e"></param>
 		private void PEGMoveButton_Click(object sender, EventArgs e)
 		{
+			//Clear
+			string _imageDir = @"D:\tmp\images";
+			if (Directory.Exists(_imageDir))
+			{
+				var imageDirInfo = new DirectoryInfo(_imageDir);
+				foreach (var item in imageDirInfo.EnumerateFiles())
+				{
+					item.Delete();
+				}
+			}
 			var width = TableObjectXLength;
 			var height = TableObjectYLength;
-			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec);
+			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec, true);
 			if (_motionAsit != null)
 			{
-				_motionAsit.RunPEG(1, MoveViewModel.xMoveLoop, MoveViewModel.YMovePixel
+				_motionAsit.RunPEG(MoveViewModel.YMoveLoop, MoveViewModel.XMoveLoop, MoveViewModel.YMovePixel
 					, MoveViewModel.XMovePixel);
 			}
 		}
@@ -321,7 +340,8 @@ namespace MotionApp
 		/// <param name="e"></param>
 		private void ServoOn_button_Click(object sender, EventArgs e)
 		{
-			enableAllAxis();
+			enableYAxisOnly();
+			//enableAllAxis();
 		}
 
 		/// <summary>
@@ -547,9 +567,9 @@ namespace MotionApp
 		/// <param name="e"></param>
 		private void resetPostionBtn_Click(object sender, EventArgs e)
 		{
-			_motionController.AllAxisBackToZero();
+			//_motionController.AllAxisBackToZero();
 			//_motionController.AxisBackToZero(1);
-			//_motionController.AxisBackToZero(2);
+			_motionController.AxisBackToZero(2);
 		}
 		#endregion
 
@@ -566,7 +586,7 @@ namespace MotionApp
 				double xValue;
 				if (!Double.TryParse(TableObjectXTextBox.Text, out xValue))
 				{
-					xValue = (int)(CameraSpec.HorizontalResolution * CameraSpec.HorizontalPixelSize);
+					xValue = (int)(CameraSpec.VerticalResolution * CameraSpec.VerticalPixelSize);
 				}
 				else
 				{
@@ -586,7 +606,7 @@ namespace MotionApp
 				double yValue;
 				if (!Double.TryParse(TableObjectYTextBox.Text, out yValue))
 				{
-					yValue = (int)(CameraSpec.VerticalResolution * CameraSpec.VerticalPixelSize);
+					yValue = (int)(CameraSpec.HorizontalResolution * CameraSpec.HorizontalPixelSize);
 				}
 				else
 				{
@@ -639,8 +659,6 @@ namespace MotionApp
 		}
 		private void GrabImageButton_Click(object sender, EventArgs e)
 		{
-			//_lineScan.SetPEGMode(4096, 4096);
-			//_lineScan.StartGrab();
 		}
 
 		void _lineScan_On_GrabImageChanged(object sender, GrabImageEventArgs e)
@@ -659,7 +677,7 @@ namespace MotionApp
 		}
 		#endregion
 
-		
+
 
 		/// <summary>
 		/// 取得影像大小
@@ -668,6 +686,75 @@ namespace MotionApp
 		public double[] GetObjectSize()
 		{
 			return new double[] { TableObjectXLength, TableObjectYLength };
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			//Settings
+			var width = TableObjectXLength;
+			var height = TableObjectYLength;
+			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec, true);
+
+			var _YMovePixels = 2000 * 10;
+
+			//Move
+			if (_motionAsit != null)
+			{
+				//=============================================variable
+				int AX, AY;
+				double TRIGGER_UM;
+				double LINEAR_RESL;
+				int MMM;
+				double START_PEG_POS, END_PEG_POS;
+				double PEG_DIST;
+				double TRIGGER_WIDTH, TRIGGER_COUNT;
+				double decreaseSpeed = 0.5;
+				int direction = -1; // 方向，y軸向上為負
+				//=============================================Common Settings
+				AX = 0;	//machine of X
+				AY = 1;// machine of Y
+				MMM = 10000;//
+				TRIGGER_UM = 3.5; //um, Camera pixelSize
+				TRIGGER_WIDTH = 0.002; //ms, exposure time
+				LINEAR_RESL = 0.1; // 不知道幹嘛用
+				TRIGGER_COUNT = direction * TRIGGER_UM / LINEAR_RESL;
+
+				//速度參數
+				var _speedBaseRate = 10;
+				var vel = _speedBaseRate * MMM * decreaseSpeed;
+				var acc = _speedBaseRate * vel;
+				var dec = acc;
+				var jerk = _speedBaseRate * acc;
+
+				//============================================== Y Axis PEG Settings
+
+				_motionController.SETCONF(205, AY, 256.0);
+				_motionController.EnableAxis(Axis.Y);
+				_motionController.VEL(AY, vel);
+				_motionController.ACC(AY, acc);
+				_motionController.DEC(AY, dec);
+				_motionController.JERK(AY, jerk);
+				PEG_DIST = direction * (_YMovePixels + 1) * TRIGGER_UM / 1000 * MMM;
+
+				double yWayMoveHalfPixels = (_YMovePixels + 1) / 2;
+				double Y_DIST = yWayMoveHalfPixels * TRIGGER_UM / 1000 * MMM;//Pixel 轉換為多少 Cout, 即為移動距離
+
+				double yMoveTotalDistance = 0.0;
+
+				//yMove
+				START_PEG_POS = _motionController.FPOS(AY);
+				var moveDistance = PEG_DIST;// +(TRIGGER_UM * 10);
+				END_PEG_POS = START_PEG_POS + moveDistance;
+				_motionController.PEG_I_S(AY, TRIGGER_WIDTH, START_PEG_POS, TRIGGER_COUNT, END_PEG_POS);
+				//
+
+				//Back
+				
+
+				_motionController.PEG_GoAndBack(AY, moveDistance);
+			}
+
+			
 		}
 
 
