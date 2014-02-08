@@ -83,6 +83,7 @@ namespace Hanbo.ACS
 		#endregion
 
 		#region Motion PEG Methods
+		private double _speedBaseRate = 4.5;
 		private void run(BackgroundWorker worker)
 		{
 			//=============================================variable
@@ -94,17 +95,23 @@ namespace Hanbo.ACS
 			double PEG_DIST;
 			double TRIGGER_WIDTH, TRIGGER_COUNT;
 			double decreaseSpeed = 0.5;
-
+			int direction = -1; // 方向，y軸向上為負
 			//=============================================Common Settings
 			AX = 0;	//machine of X
 			AY = 1;// machine of Y
 			MMM = 10000;//
-			TRIGGER_UM = 7; //um, Camera pixelSize
+			TRIGGER_UM = 3.5; //um, Camera pixelSize
 			TRIGGER_WIDTH = 0.002; //ms, exposure time
 			LINEAR_RESL = 0.1; // 不知道幹嘛用
-			TRIGGER_COUNT = TRIGGER_UM / LINEAR_RESL;
+			TRIGGER_COUNT = direction * TRIGGER_UM / LINEAR_RESL;
 
+			//速度參數
+			var vel = _speedBaseRate * MMM * decreaseSpeed;
+			var acc = _speedBaseRate * vel;
+			var dec = acc;
+			var jerk = _speedBaseRate * acc;
 			//============================================== X Axis Settings
+			/*
 			double START_X_POS, X_DIST;
 			double xWayMoveHalfPixels = _XMovePixels / 2;
 			X_DIST = xWayMoveHalfPixels * TRIGGER_UM / 1000 * MMM;//Pixel 轉換為多少 Cout, 即為移動距離
@@ -112,15 +119,12 @@ namespace Hanbo.ACS
 			START_X_POS = _motionController.FPOS(AX);// X 的起始位置
 			_motionController.SETCONF(205, AX, 256.0);
 			_motionController.EnableAxis(Axis.X);
-			var vel = 10 * MMM * decreaseSpeed;
-			var acc = 10 * vel;
-			var dec = acc;
-			var jerk = 10 * acc;
+			
 			_motionController.VEL(AX, vel);
 			_motionController.ACC(AX, acc);
 			_motionController.DEC(AX, dec);
 			_motionController.JERK(AX, jerk);
-
+			*/
 			//============================================== Y Axis PEG Settings
 
 			_motionController.SETCONF(205, AY, 256.0);
@@ -129,9 +133,9 @@ namespace Hanbo.ACS
 			_motionController.ACC(AY, acc);
 			_motionController.DEC(AY, dec);
 			_motionController.JERK(AY, jerk);
-			PEG_DIST = (_YMovePixels + 1) * TRIGGER_UM / 1000 * MMM;
+			PEG_DIST = direction * (_YMovePixels) * TRIGGER_UM / 1000 * MMM;
 
-			double yWayMoveHalfPixels = (_YMovePixels + 1) / 2;
+			double yWayMoveHalfPixels = (_YMovePixels) / 2;
 			double Y_DIST = yWayMoveHalfPixels * TRIGGER_UM / 1000 * MMM;//Pixel 轉換為多少 Cout, 即為移動距離
 
 			double yMoveTotalDistance = 0.0;
@@ -146,6 +150,7 @@ namespace Hanbo.ACS
 					Thread.Sleep(200);
 				}
 				yMoveAndBack(AY, TRIGGER_UM, PEG_DIST, TRIGGER_WIDTH, TRIGGER_COUNT, out START_PEG_POS, out END_PEG_POS);
+				/*
 				double xMoveTotalDistance = 0.0;
 				for (int x = 0; x < _XLoop; x++)
 				{
@@ -160,6 +165,7 @@ namespace Hanbo.ACS
 				}
 				//X back to original
 				_motionController.PTP_RE(AX, -xMoveTotalDistance);
+				 */
 			}
 			//Y back to original
 			_motionController.PTP_RE(AY, -yMoveTotalDistance);
