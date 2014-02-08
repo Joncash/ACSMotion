@@ -14,12 +14,14 @@ namespace Hanbo.ACS
 	{
 		private static Logger _log = NLog.LogManager.GetCurrentClassLogger();
 		private string _motionControllerIP = "10.0.0.100";
-		private BackgroundWorker _bgworker = new BackgroundWorker();
+		//private BackgroundWorker _bgworker = new BackgroundWorker();
 		private BackgroundWorker _bgworkerForDetectAxisPostion = new BackgroundWorker();
 		private SPIIPLUSCOM660Lib.Channel _ch;
 		private const double m_VelocityUnit = 50000;
 		private int _waitTimeout = 40000;
 		private int _positionDetectionSleepTime = 500;
+
+		private int _axisEnabledCode = 536870929;
 
 		public event AxisEnableEventHandler On_AxisEnabled;
 		public event XAxisMoveEventHandler On_XAxisMoved;
@@ -54,11 +56,11 @@ namespace Hanbo.ACS
 
 		private void init()
 		{
-			_bgworker.WorkerReportsProgress = true;
-			_bgworker.WorkerSupportsCancellation = true;
-			_bgworker.DoWork += _bgworker_DoWork;
-			_bgworker.ProgressChanged += _bgworker_ProgressChanged;
-			_bgworker.RunWorkerCompleted += _bgworker_RunWorkerCompleted;
+			//_bgworker.WorkerReportsProgress = true;
+			//_bgworker.WorkerSupportsCancellation = true;
+			//_bgworker.DoWork += _bgworker_DoWork;
+			//_bgworker.ProgressChanged += _bgworker_ProgressChanged;
+			//_bgworker.RunWorkerCompleted += _bgworker_RunWorkerCompleted;
 
 			//偵測移動
 			_bgworkerForDetectAxisPostion.WorkerReportsProgress = true;
@@ -113,14 +115,23 @@ namespace Hanbo.ACS
 				}
 				else
 				{
-					
-					var yPosition = _ch.GetFPosition((int)Axis.Y);
-					worker.ReportProgress((int)Axis.Y, yPosition);
-					//var xPosition = _ch.GetFPosition((int)Axis.X);
-					//worker.ReportProgress((int)Axis.X, xPosition);
-					//var zPosition = _ch.GetFPosition((int)Axis.Z);
-					//worker.ReportProgress(1);
-					Thread.Sleep(_positionDetectionSleepTime);
+
+					try
+					{
+						var yPosition = _ch.GetFPosition((int)Axis.Y);
+						worker.ReportProgress((int)Axis.Y, yPosition);
+						//var xPosition = _ch.GetFPosition((int)Axis.X);
+						//worker.ReportProgress((int)Axis.X, xPosition);
+						//var zPosition = _ch.GetFPosition((int)Axis.Z);
+						//worker.ReportProgress(1);
+					}
+					catch (Exception ex)
+					{
+					}
+					finally
+					{
+						Thread.Sleep(_positionDetectionSleepTime);
+					}
 				}
 			}
 		}
@@ -173,79 +184,79 @@ namespace Hanbo.ACS
 			Initialize(false);
 		}
 
-		void _bgworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-		{
-			if (e.Cancelled)
-			{
+		//void _bgworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		//{
+		//	if (e.Cancelled)
+		//	{
 
-			}
-			else
-			{
+		//	}
+		//	else
+		//	{
 
-			}
-			//throw new NotImplementedException();
-		}
+		//	}
+		//	//throw new NotImplementedException();
+		//}
 
 		/// <summary>
 		/// 當軸在移動時，不斷取得正在移動的軸之Position
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void _bgworker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-		{
-			Axis[] axisList = (Axis[])e.UserState;
-			foreach (var axis in axisList)
-			{
-				switch (axis)
-				{
-					case Axis.X:
-						if (On_XAxisMoved != null)
-						{
-							On_XAxisMoved(null, _ch.GetFPosition((int)axis));
-						}
-						break;
-					case Axis.Y:
-						if (On_YAxisMoved != null)
-						{
-							On_YAxisMoved(null, _ch.GetFPosition((int)axis));
-						}
-						break;
-					case Axis.Z:
-						if (On_ZAxisMoved != null)
-						{
-							On_ZAxisMoved(null, _ch.GetFPosition((int)axis));
-						}
-						break;
+		//void _bgworker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+		//{
+		//	//Axis[] axisList = (Axis[])e.UserState;
+		//	//foreach (var axis in axisList)
+		//	//{
+		//	//	switch (axis)
+		//	//	{
+		//	//		case Axis.X:
+		//	//			if (On_XAxisMoved != null)
+		//	//			{
+		//	//				On_XAxisMoved(null, _ch.GetFPosition((int)axis));
+		//	//			}
+		//	//			break;
+		//	//		case Axis.Y:
+		//	//			if (On_YAxisMoved != null)
+		//	//			{
+		//	//				On_YAxisMoved(null, _ch.GetFPosition((int)axis));
+		//	//			}
+		//	//			break;
+		//	//		case Axis.Z:
+		//	//			if (On_ZAxisMoved != null)
+		//	//			{
+		//	//				On_ZAxisMoved(null, _ch.GetFPosition((int)axis));
+		//	//			}
+		//	//			break;
 
-					default:
-						break;
-				}
-			}
+		//	//		default:
+		//	//			break;
+		//	//	}
+		//	//}
 
 
-		}
+		//}
 
-		void _bgworker_DoWork(object sender, DoWorkEventArgs e)
-		{
-			var worker = sender as BackgroundWorker;
-			int index = 10;
+		//void _bgworker_DoWork(object sender, DoWorkEventArgs e)
+		//{
+		//	var worker = sender as BackgroundWorker;
+		//	int index = 10;
 
-			while (true)
-			{
-				if (worker.CancellationPending)
-				{
-					e.Cancel = true;
-					break;
-				}
-				else
-				{
-					index++;
-					worker.ReportProgress(index, e.Argument);
-					Thread.Sleep(200);
-				}
-			}
+		//	while (true)
+		//	{
+		//		if (worker.CancellationPending)
+		//		{
+		//			e.Cancel = true;
+		//			break;
+		//		}
+		//		else
+		//		{
+		//			index++;
+		//			worker.ReportProgress(index, e.Argument);
+		//			Thread.Sleep(200);
+		//		}
+		//	}
 
-		}
+		//}
 
 		/// <summary>
 		/// 指定某一軸，呈顯激活狀態，並等待電機指令的狀態
@@ -261,7 +272,7 @@ namespace Hanbo.ACS
 
 				while (true)
 				{
-					if (_ch.GetMotorState(axisInt) == 536870929)
+					if (_ch.GetMotorState(axisInt) == _axisEnabledCode)
 						break;
 				}
 
@@ -279,7 +290,7 @@ namespace Hanbo.ACS
 		public bool GetAxisEnableStatus(Axis axis)
 		{
 			int axisInt = (int)axis;
-			var enabled = _ch.GetMotorState(axisInt) == 536870929;
+			var enabled = _ch.GetMotorState(axisInt) == _axisEnabledCode;
 			var msg = (enabled) ? "Success" : "Fail";
 			if (On_AxisEnabled != null)
 			{
@@ -377,7 +388,7 @@ namespace Hanbo.ACS
 		{
 			try
 			{
-				_bgworker.CancelAsync();
+				//_bgworker.CancelAsync();
 			}
 			catch (Exception ex)
 			{
@@ -557,13 +568,27 @@ namespace Hanbo.ACS
 		}
 		public void PEG_GoAndBack(int axis, double point)
 		{
+			/* 不工作*/
+			var MMM = 10000;//
+			var decreaseSpeed = 1;
+			var _speedBaseRate = 100;
+			var vel = _speedBaseRate * MMM * decreaseSpeed;
+			var acc = _speedBaseRate * vel;
+			var dec = acc;
+			var jerk = _speedBaseRate * acc;
+
 			int flags = _ch.ACSC_AMF_RELATIVE;
 			_ch.ToPoint(flags, axis, point);
 			//_ch.WaitMotionEnd(axis, 200000);
-			_ch.ToPoint(flags, axis, -point);
+			ACC(axis, acc);
+			DEC(axis, dec);
+			JERK(axis, jerk);
+			_ch.ExtToPoint(_ch.ACSC_AMF_VELOCITY | _ch.ACSC_AMF_RELATIVE, axis, -point, vel, vel);
+			//_ch.ToPoint(flags, axis, -point);
 			//_ch.WaitMotionEnd(axis, 200000);
 			_ch.EndSequence(axis);
 			_ch.WaitMotionEnd(axis, 200000);
+
 		}
 
 		public void PTP_E(int axis, double point)
