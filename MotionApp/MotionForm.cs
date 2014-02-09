@@ -20,6 +20,7 @@ using System.IO;
 
 namespace MotionApp
 {
+	delegate void SetTextCallback(string text);
 	//PEG
 	public delegate void RequestMergeImageDelegate();
 	//END PEG
@@ -104,13 +105,8 @@ namespace MotionApp
 		#endregion
 
 		#region private methods
-		private void initLineScan()
-		{
-			_lineScan = new LineScan();
-			_lineScan.On_RunningMessage += _lineScan_On_RunningMessage;
-			_lineScan.On_Loaded += _lineScan_On_Loaded;
-			_lineScan.On_GrabImageChanged += _lineScan_On_GrabImageChanged;
-		}
+
+
 		private void initilizeUIEnableStatus()
 		{
 			XNYPAxis_button.Enabled = false;
@@ -268,6 +264,24 @@ namespace MotionApp
 		/// <param name="e"></param>
 		private void PEGMoveButton_Click(object sender, EventArgs e)
 		{
+			scanWithFileProcedure();
+			//scanWithMemoryProcedure();
+		}
+		private void scanWithMemoryProcedure()
+		{
+			//Stop Line Scan, then Wait for Ready Singnal
+			if (_lineScan.Running)
+			{
+				_lineScan.StopGrab();
+			}
+			else
+			{
+				startScan();
+			}
+		}
+
+		private void scanWithFileProcedure()
+		{
 			//Clear
 			string _imageDir = @"D:\tmp\images";
 			if (Directory.Exists(_imageDir))
@@ -278,6 +292,7 @@ namespace MotionApp
 					item.Delete();
 				}
 			}
+
 			var width = TableObjectXLength;
 			var height = TableObjectYLength;
 			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec, true);
@@ -618,6 +633,16 @@ namespace MotionApp
 
 		public PEGMoveViewModel MoveViewModel { get; set; }
 
+		/// <summary>
+		/// 取得影像大小
+		/// </summary>
+		/// <returns></returns>
+		public double[] GetObjectSize()
+		{
+			return new double[] { TableObjectXLength, TableObjectYLength };
+		}
+
+
 		#endregion
 
 		#region UI Proprities
@@ -659,33 +684,6 @@ namespace MotionApp
 		}
 		private void GrabImageButton_Click(object sender, EventArgs e)
 		{
-		}
-
-		void _lineScan_On_GrabImageChanged(object sender, GrabImageEventArgs e)
-		{
-			var image = e.ViewModel as HImage;
-		}
-
-		void _lineScan_On_Loaded(object sender, GrabImageEventArgs e)
-		{
-			//throw new NotImplementedException();
-		}
-
-		void _lineScan_On_RunningMessage(object sender, GrabImageEventArgs e)
-		{
-			//throw new NotImplementedException();
-		}
-		#endregion
-
-
-
-		/// <summary>
-		/// 取得影像大小
-		/// </summary>
-		/// <returns></returns>
-		public double[] GetObjectSize()
-		{
-			return new double[] { TableObjectXLength, TableObjectYLength };
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -749,13 +747,99 @@ namespace MotionApp
 				//
 
 				//Back
-				
+
 
 				_motionController.PEG_GoAndBack(AY, moveDistance);
 			}
 
-			
+
 		}
+
+		#endregion
+
+		#region GrabImage
+		private List<HImage> _ImageList;
+		private void initLineScan()
+		{
+			_lineScan = new LineScan(10000, 2000, true);
+			_lineScan.On_RunningMessage += _lineScan_On_RunningMessage;
+			_lineScan.On_Loaded += _lineScan_On_Loaded;
+			_lineScan.On_GrabImageChanged += _lineScan_On_GrabImageChanged;
+		}
+		private int imageCount = 0;
+		void _lineScan_On_GrabImageChanged(object sender, GrabImageEventArgs e)
+		{
+			var image = e.ViewModel as HImage;
+			if (image != null)
+			{
+				_ImageList.Add(image);
+				imageCount++;
+				setMessage(imageCount.ToString());
+			}
+		}
+
+		void _lineScan_On_Loaded(object sender, GrabImageEventArgs e)
+		{
+			//throw new NotImplementedException();
+		}
+
+		void _lineScan_On_RunningMessage(object sender, GrabImageEventArgs e)
+		{
+			var msg = e.Message;
+			if (msg == "stop_Completed")
+			{
+				startScan();
+			}
+			else
+			{
+				setMessage(e.Message);
+
+			}
+			//throw new NotImplementedException();
+		}
+		private void setMessage(string msg)
+		{
+			//LoLabel.Text = e.Message;
+			if (this.LoLabel.InvokeRequired)
+			{
+				SetTextCallback d = new SetTextCallback(setMessage);
+				this.Invoke(d, new object[] { msg });
+			}
+			else
+			{
+				this.LoLabel.Text = msg;
+			}
+		}
+		private void startScan()
+		{
+			var width = TableObjectXLength;
+			var height = TableObjectYLength;
+			CameraSpec.HorizontalPixelSize = 3.5;
+			CameraSpec.VerticalPixelSize = 3.5;
+			CameraSpec.HorizontalResolution = 2000;
+			CameraSpec.VerticalResolution = 10000;
+			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec, true);
+
+
+			_lineScan.SetPEGMode(10000, 2000);
+			_lineScan.StartGrab();
+			while (!_lineScan.Running)
+			{
+				Thread.Sleep(200);
+			}
+
+			//Do Scan
+
+			if (_motionAsit != null)
+			{
+				_motionAsit.RunPEG(MoveViewModel.YMoveLoop, MoveViewModel.XMoveLoop, MoveViewModel.YMovePixel
+					, MoveViewModel.XMovePixel);
+			}
+		}
+
+		#endregion
+
+
 
 
 
