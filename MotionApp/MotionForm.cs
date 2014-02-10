@@ -69,6 +69,7 @@ namespace MotionApp
 		private MotionController _motionController;
 		private MotionAssistant _motionAsit;
 		private LineScan _lineScan;// = new LineScan();
+		private bool _isSimulate = false;
 		#endregion
 
 		#region 建構子
@@ -78,7 +79,7 @@ namespace MotionApp
 			TableObjectXTextBox.Enabled = false;
 			//initLineScan();
 			CameraSpec = ConfigurationHelper.GetCameraSpec();
-
+			_isSimulate = ConfigurationHelper.GetACSSimulateFlag();
 			initilizeUIEnableStatus();
 			initializeMotionController();
 		}
@@ -163,7 +164,7 @@ namespace MotionApp
 
 		private void initializeMotionController()
 		{
-			_motionController = DeviceController.GetMotionControllerInstance();
+			_motionController = DeviceController.GetMotionControllerInstance(_isSimulate);
 			_motionController.On_AxisEnabled += _motionController_On_AxisEnabled;
 			_motionController.On_XAxisMoved += _motionController_On_XAxisMoved;
 			_motionController.On_YAxisMoved += _motionController_On_YAxisMoved;
@@ -282,7 +283,7 @@ namespace MotionApp
 
 		private void scanWithFileProcedure()
 		{
-			//Clear
+			////Clear
 			string _imageDir = @"D:\tmp\images";
 			if (Directory.Exists(_imageDir))
 			{
@@ -501,7 +502,7 @@ namespace MotionApp
 		/// <param name="e"></param>
 		private void Init_button_Click(object sender, EventArgs e)
 		{
-			_motionController.Initialize(false);
+			_motionController.Initialize(_isSimulate);
 		}
 
 

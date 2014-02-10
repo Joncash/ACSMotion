@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.XAxis_textBox = new System.Windows.Forms.TextBox();
 			this.ZAxis_textBox = new System.Windows.Forms.TextBox();
 			this.YAxis_textBox = new System.Windows.Forms.TextBox();
@@ -77,6 +78,7 @@
 			this.label6 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.button1 = new System.Windows.Forms.Button();
+			this.FormToolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.statusStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.xMagnificationTrackBar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.yMagnificationTrackBar)).BeginInit();
@@ -130,7 +132,7 @@
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
             this.toolStripStatusLabel3});
-			this.statusStrip1.Location = new System.Drawing.Point(0, 475);
+			this.statusStrip1.Location = new System.Drawing.Point(0, 474);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(329, 22);
 			this.statusStrip1.TabIndex = 7;
@@ -139,7 +141,7 @@
 			// toolStripStatusLabel
 			// 
 			this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-			this.toolStripStatusLabel.Size = new System.Drawing.Size(83, 17);
+			this.toolStripStatusLabel.Size = new System.Drawing.Size(87, 17);
 			this.toolStripStatusLabel.Text = "Disconnection";
 			// 
 			// toolStripStatusLabel1
@@ -389,6 +391,7 @@
 			this.ServoOff_button.Name = "ServoOff_button";
 			this.ServoOff_button.Size = new System.Drawing.Size(48, 52);
 			this.ServoOff_button.TabIndex = 12;
+			this.FormToolTip.SetToolTip(this.ServoOff_button, "中斷各軸連線");
 			this.ServoOff_button.UseVisualStyleBackColor = true;
 			this.ServoOff_button.Click += new System.EventHandler(this.ServoOff_button_Click);
 			// 
@@ -399,6 +402,7 @@
 			this.Init_button.Name = "Init_button";
 			this.Init_button.Size = new System.Drawing.Size(48, 52);
 			this.Init_button.TabIndex = 11;
+			this.FormToolTip.SetToolTip(this.Init_button, "連線至控制器");
 			this.Init_button.UseVisualStyleBackColor = true;
 			this.Init_button.Click += new System.EventHandler(this.Init_button_Click);
 			// 
@@ -441,6 +445,7 @@
 			this.ServoOn_button.Name = "ServoOn_button";
 			this.ServoOn_button.Size = new System.Drawing.Size(48, 52);
 			this.ServoOn_button.TabIndex = 6;
+			this.FormToolTip.SetToolTip(this.ServoOn_button, "啟動各軸連線");
 			this.ServoOn_button.UseVisualStyleBackColor = true;
 			this.ServoOn_button.Click += new System.EventHandler(this.ServoOn_button_Click);
 			// 
@@ -626,7 +631,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(329, 497);
+			this.ClientSize = new System.Drawing.Size(329, 496);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.label6);
@@ -736,6 +741,7 @@
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.ToolTip FormToolTip;
 	}
 }
 

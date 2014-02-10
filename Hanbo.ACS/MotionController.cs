@@ -33,10 +33,11 @@ namespace Hanbo.ACS
 		public event InitMotionEventHandler On_MotionInited;
 		public event DisableAxisAllMotionEventHandler On_AllAxisDisabled;
 		public event ResetEventHandler On_ResetPositioned;
+		private bool _simulate = false;
 
 
 		/// <summary>
-		/// initialize
+		/// initialize, 預設為直接連線至控制器, Motion Controller IP, 預設為 10.0.0.100
 		/// </summary>
 		public MotionController()
 		{
@@ -51,6 +52,13 @@ namespace Hanbo.ACS
 		public MotionController(string motionControllerIP)
 		{
 			_motionControllerIP = motionControllerIP;
+			init();
+		}
+
+		public MotionController(bool _simulate)
+		{
+			// TODO: Complete member initialization
+			this._simulate = _simulate;
 			init();
 		}
 
@@ -181,7 +189,7 @@ namespace Hanbo.ACS
 
 		public void Initialize()
 		{
-			Initialize(false);
+			Initialize(_simulate);
 		}
 
 		//void _bgworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
