@@ -270,14 +270,14 @@ namespace MotionApp
 		private void scanWithMemoryProcedure()
 		{
 			//Stop Line Scan, then Wait for Ready Singnal
-			if (_lineScan.Running)
-			{
-				_lineScan.StopGrab();
-			}
-			else
-			{
-				startScan();
-			}
+			//if (_lineScan.Running)
+			//{
+			//	_lineScan.StopGrab();
+			//}
+			//else
+			//{
+			//	startScan();
+			//}
 		}
 
 		private void scanWithFileProcedure()
@@ -401,18 +401,20 @@ namespace MotionApp
 		private void YPAxis_MouseDown(object sender, MouseEventArgs e)
 		{
 			yAxisPicture.Image = MotionApp.Properties.Resources.Letter_Y_lg_icon;
-			_motionController.SingleAxisMove(Axis.Y, Direction.POSITIVE, yMagnificationTrackBar.Value * (int)ySpeedUnitDropDown.Value);
+			var direction = Direction.NEGATIVE;
+			_motionController.SingleAxisMove(Axis.Y, direction, yMagnificationTrackBar.Value * (int)ySpeedUnitDropDown.Value);
 		}
 
 		/// <summary>
-		///  X軸負向移動
+		///  Y軸負向移動
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void YNAxis_MouseDown(object sender, MouseEventArgs e)
 		{
 			yAxisPicture.Image = MotionApp.Properties.Resources.Letter_Y_lg_icon;
-			_motionController.SingleAxisMove(Axis.Y, Direction.NEGATIVE, yMagnificationTrackBar.Value * (int)ySpeedUnitDropDown.Value);
+			var direction = Direction.POSITIVE;
+			_motionController.SingleAxisMove(Axis.Y, direction, yMagnificationTrackBar.Value * (int)ySpeedUnitDropDown.Value);
 		}
 
 		/// <summary>
@@ -821,23 +823,24 @@ namespace MotionApp
 			MoveViewModel = PEGCalculator.GetPEGMoveModel(width, height, CameraSpec, true);
 
 
-			_lineScan.SetPEGMode(10000, 2000);
-			_lineScan.StartGrab();
-			while (!_lineScan.Running)
-			{
-				Thread.Sleep(200);
-			}
+			//_lineScan.SetPEGMode(10000, 2000);
+			//_lineScan.StartGrab();
+			//while (!_lineScan.Running)
+			//{
+			//	Thread.Sleep(200);
+			//}
 
-			//Do Scan
+			////Do Scan
 
-			if (_motionAsit != null)
-			{
-				_motionAsit.RunPEG(MoveViewModel.YMoveLoop, MoveViewModel.XMoveLoop, MoveViewModel.YMovePixel
-					, MoveViewModel.XMovePixel);
-			}
+			//if (_motionAsit != null)
+			//{
+			//	_motionAsit.RunPEG(MoveViewModel.YMoveLoop, MoveViewModel.XMoveLoop, MoveViewModel.YMovePixel
+			//		, MoveViewModel.XMovePixel);
+			//}
 		}
 
 		#endregion
+
 
 
 
